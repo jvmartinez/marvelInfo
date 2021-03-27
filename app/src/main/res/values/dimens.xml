@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="standard_text_item">10dp</dimen>
+    <dimen name="standard_image_item">3dp</dimen>
+    <dimen name="standard_activity">10dp</dimen>
+    <dimen name="standard_rounder">10dp</dimen>
+    <dimen name="header_height">80dp</dimen>
+    <dimen name="header_width">240dp</dimen>
+</resources>

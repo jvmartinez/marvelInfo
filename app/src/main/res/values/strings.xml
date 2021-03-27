@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Marvel Info</string>
+    <string name="btn_ok">Ok</string>
+    <string name="title_notification">Notification</string>
+    <string name="message_error_generic">Unexpected error</string>
+
+    <!-- key marvel   -->
+    <string name="public_key">acf529da128026f3eb1145dfda52e68c</string>
+    <string name="private_key">be51278b08aecb1fccbf64eaf4c084208c9a86db</string>
+    <string name="message_error_api">Occurs when the apikey parameter is not included with a request.</string>
+    <string name="message_error_hash">Occurs when an apikey parameter is included with a request, a ts parameter is present, but no hash parameter is sent. Occurs on server-side applications only.</string>
+    <string name="message_error_timestamp">Occurs when an apikey parameter is included with a request, a hash parameter is present, but no ts parameter is sent. Occurs on server-side applications only.</string>
+    <string name="message_error_referer">Occurs when a referrer which is not valid for the passed apikey parameter is sent.</string>
+    <string name="message_error_invalid_hash">Occurs when a ts, hash and apikey parameter are sent but the hash is not valid per the above hash generation rule.</string>
+    <string name="message_error_not_allowed">Occurs when an API endpoint is accessed using an HTTP verb which is not allowed for that endpoint.</string>
+    <string name="message_error_forbidden">Occurs when a user with an otherwise authenticated request attempts to access an endpoint to which they do not have access.</string>
+    <string name="todo">TODO</string>
+    <string name="message_not_description">Description not available.</string>
+</resources>
