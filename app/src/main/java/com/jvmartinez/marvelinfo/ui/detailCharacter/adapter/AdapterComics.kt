@@ -10,11 +10,11 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.model.ComicResult
-import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterActions
+import com.jvmartinez.marvelinfo.ui.detailCharacter.fragment.comic.ComicActions
 import kotlinx.android.synthetic.main.item_comics_character.view.*
 
 class AdapterComics(private var comics: List<ComicResult>,
-                    private var detailsCharacterActions: DetailsCharacterActions) :
+                    private var comicActions: ComicActions) :
         RecyclerView.Adapter<AdapterComics.ViewHolder>() {
 
 
@@ -63,9 +63,12 @@ class AdapterComics(private var comics: List<ComicResult>,
             itemView.btnGoWeb.setOnClickListener {
                 comicResult.urls.forEach {
                     if (it.type == "detail") {
-                        detailsCharacterActions.onGoWeb(it.url)
+                        comicActions.onGoWeb(it.url)
                     }
                 }
+            }
+            itemView.setOnClickListener {
+                comicActions.showDialogInfoComic(comicResult)
             }
         }
     }

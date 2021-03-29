@@ -11,7 +11,7 @@ import com.jvmartinez.marvelinfo.utils.MarvelTags
 import kotlinx.android.synthetic.main.content_detail_character.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class DetailsCharacterActivity : BaseActivity(), DetailsCharacterActions {
+class DetailsCharacterActivity : BaseActivity() {
     private val detailsCharacterViewModel by viewModel<DetailsCharacterViewModel>()
     private lateinit var adapterCharacter: AdapterCharacter
     private lateinit var extra: Bundle
@@ -112,9 +112,5 @@ class DetailsCharacterActivity : BaseActivity(), DetailsCharacterActions {
                 )
             }
         }
-    }
-
-    override fun onGoWeb(url: String) {
-        
     }
 }
