@@ -1,6 +1,7 @@
 package com.jvmartinez.marvelinfo
 
 import android.app.Application
+import com.google.firebase.FirebaseApp
 import com.jvmartinez.marvelinfo.core.di.repositoryModule
 import com.jvmartinez.marvelinfo.core.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -12,6 +13,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidLogger()
+            FirebaseApp.initializeApp(this@App)
             androidContext(this@App)
             modules(
                 listOf(

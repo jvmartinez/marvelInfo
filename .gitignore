@@ -83,3 +83,12 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+.idea/.gitignore
+.idea/.name
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/markdown-navigator.xml
+.idea/markdown-navigator-enh.xml
+.idea/misc.xml
+.idea/inspectionProfiles/Project_Default.xml
+app/google-services.json
