@@ -50,6 +50,7 @@
             style="@style/Theme.MarvelInfo.LineText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:lines="4"
             android:ellipsize="end"
             app:layout_constraintBottom_toTopOf="@+id/modifiedCharacter"
             app:layout_constraintEnd_toEndOf="parent"

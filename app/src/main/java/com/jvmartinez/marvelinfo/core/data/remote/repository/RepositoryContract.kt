@@ -8,7 +8,7 @@ interface RepositoryContract {
     /**
      * Find all character
      */
-    fun findAllCharacter() : Observable<ResponseMarvel>
+    fun findAllCharacter(offset: Int, nameCharacter: String? =  null) : Observable<ResponseMarvel>
 
     /**
      * Find all character by id

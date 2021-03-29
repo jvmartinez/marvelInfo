@@ -11,7 +11,9 @@ interface RepositoryMarvelContract {
     fun findAllCharacter(
         @Query("ts") ts: Int,
         @Query("apikey") key: String,
-        @Query("hash") hash: String
+        @Query("hash") hash: String,
+        @Query("offset") offset: Int? =  null,
+        @Query("name") nameCharacter: String? = null
     ) : Call<ResponseMarvel>
 
     @GET("v1/public/characters/{characterId}")

@@ -18,18 +18,28 @@ import retrofit2.Response
 class RepositoryMarvel(private val app: Application) : RepositoryContract {
 
 
-    override fun findAllCharacter(): Observable<ResponseMarvel> {
+    override fun findAllCharacter(offset: Int, nameCharacter: String?): Observable<ResponseMarvel> {
         val subject = BehaviorSubject.create<ResponseMarvel>()
-
-        val responseAllCharacter = ApiMarvelRepository.getInstance().getService().findAllCharacter(
+        val responseAllCharacter = if (nameCharacter?.isNotEmpty() == true) {
+            ApiMarvelRepository.getInstance().getService().findAllCharacter(
                 1,
                 app.getString(R.string.public_key),
-                MarvelInfoUtils.createHash(app)
-        )
+                MarvelInfoUtils.createHash(app),
+                null,
+                nameCharacter,
+            )
+        } else {
+            ApiMarvelRepository.getInstance().getService().findAllCharacter(
+                1,
+                app.getString(R.string.public_key),
+                MarvelInfoUtils.createHash(app),
+                offset,
+            )
+        }
         responseAllCharacter.enqueue(object : Callback<ResponseMarvel> {
             override fun onResponse(
-                    call: Call<ResponseMarvel>,
-                    response: Response<ResponseMarvel>
+                call: Call<ResponseMarvel>,
+                response: Response<ResponseMarvel>
             ) {
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
@@ -37,10 +47,10 @@ class RepositoryMarvel(private val app: Application) : RepositoryContract {
                         subject.onComplete()
                     } else {
                         subject.onError(
-                                MarvelInfoError.showError(
-                                        response.message(),
-                                        response.code()
-                                ).error()
+                            MarvelInfoError.showError(
+                                response.message(),
+                                response.code()
+                            ).error()
                         )
                     }
                 } else {
@@ -60,15 +70,15 @@ class RepositoryMarvel(private val app: Application) : RepositoryContract {
     override fun findCharacterById(characterID: Int): Observable<ResponseMarvel> {
         val subject = BehaviorSubject.create<ResponseMarvel>()
         val responseCharacter = ApiMarvelRepository.getInstance().getService().findCharacterById(
-                characterID,
-                1,
-                app.getString(R.string.public_key),
-                MarvelInfoUtils.createHash(app)
+            characterID,
+            1,
+            app.getString(R.string.public_key),
+            MarvelInfoUtils.createHash(app)
         )
         responseCharacter.enqueue(object : Callback<ResponseMarvel> {
             override fun onResponse(
-                    call: Call<ResponseMarvel>,
-                    response: Response<ResponseMarvel>
+                call: Call<ResponseMarvel>,
+                response: Response<ResponseMarvel>
             ) {
                 when {
                     response.isSuccessful -> {
@@ -78,16 +88,16 @@ class RepositoryMarvel(private val app: Application) : RepositoryContract {
                     response.code() in 400..499 -> {
                         val errorBody = JSONObject(response.errorBody()!!.string())
                         subject.onError(
-                                MarvelInfoError.showError(
-                                        errorBody.getString("status"),
-                                        errorBody.getString("code").toInt()
-                                ).error()
+                            MarvelInfoError.showError(
+                                errorBody.getString("status"),
+                                errorBody.getString("code").toInt()
+                            ).error()
                         )
                     }
                     else -> {
                         MarvelInfoError.showError(
-                                "fail",
-                                0
+                            "fail",
+                            0
                         ).error()
                     }
                 }
@@ -102,16 +112,17 @@ class RepositoryMarvel(private val app: Application) : RepositoryContract {
 
     override fun findAllComicsByCharacter(characterID: Int): Observable<ResponseMarvelComic> {
         val subject = BehaviorSubject.create<ResponseMarvelComic>()
-        val responseComics = ApiMarvelRepository.getInstance().getService().findAllComicsByCharacter(
+        val responseComics =
+            ApiMarvelRepository.getInstance().getService().findAllComicsByCharacter(
                 characterID,
                 1,
                 app.getString(R.string.public_key),
                 MarvelInfoUtils.createHash(app)
-        )
+            )
         responseComics.enqueue(object : Callback<ResponseMarvelComic> {
             override fun onResponse(
-                    call: Call<ResponseMarvelComic>,
-                    response: Response<ResponseMarvelComic>
+                call: Call<ResponseMarvelComic>,
+                response: Response<ResponseMarvelComic>
             ) {
                 when {
                     response.isSuccessful -> {
@@ -121,16 +132,16 @@ class RepositoryMarvel(private val app: Application) : RepositoryContract {
                     response.code() in 400..499 -> {
                         val errorBody = JSONObject(response.errorBody()!!.string())
                         subject.onError(
-                                MarvelInfoError.showError(
-                                        errorBody.getString("status"),
-                                        errorBody.getString("code").toInt()
-                                ).error()
+                            MarvelInfoError.showError(
+                                errorBody.getString("status"),
+                                errorBody.getString("code").toInt()
+                            ).error()
                         )
                     }
                     else -> {
                         MarvelInfoError.showError(
-                                "fail",
-                                0
+                            "fail",
+                            0
                         ).error()
                     }
                 }

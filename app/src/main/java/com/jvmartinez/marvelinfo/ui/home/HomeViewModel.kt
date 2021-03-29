@@ -17,11 +17,15 @@ class HomeViewModel(private val repository: RepositoryMarvel) : ViewModel() {
     val checkError: LiveData<HomeEnum>
         get() = statusHomeError
 
-    fun findCharacters() {
-        repository.findAllCharacter()
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.newThread())
-            .subscribe(::processFindCharacters, ::errorProcessFindCharacters)
+    private var total: Int = 1
+
+    fun findCharacters(offset: Int) {
+        if (offset != this.total) {
+            repository.findAllCharacter(offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(::processFindCharacters, ::errorProcessFindCharacters)
+        }
     }
 
     private fun errorProcessFindCharacters(throwable: Throwable?) {
@@ -56,6 +60,11 @@ class HomeViewModel(private val repository: RepositoryMarvel) : ViewModel() {
     }
 
     private fun processFindCharacters(responseMarvel: ResponseMarvel?) {
+         responseMarvel?.data?.total.let {
+             if (it != null) {
+                 total = it
+             }
+         }
         responseLiveData.postValue(responseMarvel)
     }
 }

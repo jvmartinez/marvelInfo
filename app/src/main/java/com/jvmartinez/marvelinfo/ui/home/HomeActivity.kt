@@ -1,7 +1,9 @@
 package com.jvmartinez.marvelinfo.ui.home
 
 import android.os.Bundle
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
 import com.jvmartinez.marvelinfo.ui.base.BaseActivity
@@ -12,16 +14,36 @@ import com.jvmartinez.marvelinfo.utils.MarvelTags
 import kotlinx.android.synthetic.main.content_home.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class HomeActivity : BaseActivity(), HomeActions {
+class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener {
     private val homeViewModel by viewModel<HomeViewModel>()
     private lateinit var adapterCharacters: AdapterCharacters
+    private var offset: Int = 0
 
     override fun layoutId() = R.layout.activity_home
 
     override fun onSetup() {
-        homeViewModel.findCharacters()
+        homeViewModel.findCharacters(offset)
         showLoading()
         onAdapter()
+        onClick()
+        customUI()
+    }
+
+    private fun customUI() {
+        searchCharacter.setOnQueryTextListener(this)
+    }
+
+    private fun onClick() {
+        recyclerViewCharacters.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    showLoading()
+                    offset += 50
+                    homeViewModel.findCharacters(offset)
+                }
+            }
+        })
     }
 
     override fun onObserver() {
@@ -93,15 +115,25 @@ class HomeActivity : BaseActivity(), HomeActions {
     private fun onAdapter() {
         adapterCharacters = AdapterCharacters(mutableListOf(), this)
         recyclerViewCharacters.layoutManager = LinearLayoutManager(this)
+        recyclerViewCharacters.setHasFixedSize(true)
         recyclerViewCharacters.adapter = adapterCharacters
     }
 
     override fun onShowCharacter(characterID: Int) {
         val bundle = Bundle()
         bundle.putInt(MarvelTags.CHARACTER_ID, characterID)
-        MarvelInfoUtils.callActivity(this,
+        MarvelInfoUtils.callActivity(
+            this,
             DetailsCharacterActivity::class.java,
             bundle
         )
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        return false
     }
 }

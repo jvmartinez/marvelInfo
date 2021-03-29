@@ -13,7 +13,7 @@ import com.jvmartinez.marvelinfo.core.model.Result
 import com.jvmartinez.marvelinfo.ui.home.HomeActions
 import kotlinx.android.synthetic.main.item_character.view.*
 
-class AdapterCharacters(private var characters: List<Result>,
+class AdapterCharacters(private var characters: MutableList<Result>,
                         private val homeActions: HomeActions) :
         RecyclerView.Adapter<AdapterCharacters.ViewHolder>() {
 
@@ -25,7 +25,7 @@ class AdapterCharacters(private var characters: List<Result>,
 
     fun onData(characters: List<Result>?) {
         if (characters != null) {
-            this.characters = characters
+            this.characters.addAll(characters)
             notifyDataSetChanged()
         }
     }
