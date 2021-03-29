@@ -1,58 +1,69 @@
-package com.jvmartinez.marvelinfo.ui.detailCharacter
+package com.jvmartinez.marvelinfo.ui.detailCharacter.fragment.comic
 
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayoutMediator
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jvmartinez.marvelinfo.R
-import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
-import com.jvmartinez.marvelinfo.ui.base.BaseActivity
+import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvelComic
 import com.jvmartinez.marvelinfo.ui.base.BaseEnum
-import com.jvmartinez.marvelinfo.ui.detailCharacter.adapter.AdapterCharacter
+import com.jvmartinez.marvelinfo.ui.base.BaseFragment
+import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterActions
+import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterViewModel
+import com.jvmartinez.marvelinfo.ui.detailCharacter.adapter.AdapterComics
 import com.jvmartinez.marvelinfo.utils.MarvelTags
-import kotlinx.android.synthetic.main.content_detail_character.*
+import kotlinx.android.synthetic.main.fragment_comics.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class DetailsCharacterActivity : BaseActivity(), DetailsCharacterActions {
+class ComicsFragment : BaseFragment(), DetailsCharacterActions {
     private val detailsCharacterViewModel by viewModel<DetailsCharacterViewModel>()
-    private lateinit var adapterCharacter: AdapterCharacter
-    private lateinit var extra: Bundle
-    override fun layoutId() = R.layout.activity_details_character
+    private var characterId: Int? = 0
+    private lateinit var adapterComics: AdapterComics
 
-    override fun onSetup() {
-        showLoading()
-        extra = intent.extras!!
-        detailsCharacterViewModel.findCharacterById(extra.getInt(MarvelTags.CHARACTER_ID, 0))
+    override fun getLayoutId() = R.layout.fragment_comics
+
+    override fun onSetup(view: View) {
+        characterId?.let {
+            detailsCharacterViewModel.findAllComics(it)
+        }
         onAdapter()
-        onCustomUI()
     }
 
-    private fun onCustomUI() {
-        TabLayoutMediator(itemsCharacter, contentCharacter) { tab, position ->
-            contentCharacter.setCurrentItem(tab.position, true)
-            tab.text =  when (position) {
-                0 -> { getString(R.string.lblComics) }
-                1 -> { getString(R.string.lblSeries) }
-                2 -> { getString(R.string.lblEvents) }
-               else ->  { getString(R.string.lblComics) }
-           }
-        }.attach()
+    override fun onSetup() {
+        arguments?.let {
+            characterId = it.getInt(MarvelTags.CHARACTER_ID)
+        }
     }
 
     private fun onAdapter() {
-        adapterCharacter = AdapterCharacter(itemsCharacter.tabCount,
-                extra.getInt(MarvelTags.CHARACTER_ID, 0),
-                this)
-        contentCharacter.adapter = adapterCharacter
+        adapterComics = AdapterComics(mutableListOf(), this)
+        recyclerViewComics.layoutManager = LinearLayoutManager(context)
+        recyclerViewComics.adapter = adapterComics
     }
 
     override fun onObserver() {
-        detailsCharacterViewModel.checkResponse.observe(::getLifecycle, ::showCharacter)
+        detailsCharacterViewModel.checkResponseComic.observe(::getLifecycle, ::flowComics)
         detailsCharacterViewModel.checkError.observe(::getLifecycle, ::showErrorDetailSCharacter)
     }
 
-    private fun showCharacter(responseMarvel: ResponseMarvel?) {
-        hideLoading()
-
+    private fun flowComics(responseMarvelComic: ResponseMarvelComic?) {
+        responseMarvelComic?.data?.results?.let {
+            adapterComics.onData(it)
+        }
     }
+
+    //    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        arguments?.let {
+//
+//        }
+//    }
+//
+//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+//                              savedInstanceState: Bundle?): View? {
+//        // Inflate the layout for this fragment
+//        return inflater.inflate(R.layout.fragment_comics, container, false)
+//    }
+//
 
     private fun showErrorDetailSCharacter(baseEnum: BaseEnum?) {
         hideLoading()
@@ -115,6 +126,17 @@ class DetailsCharacterActivity : BaseActivity(), DetailsCharacterActions {
     }
 
     override fun onGoWeb(url: String) {
-        
+
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance(characterId: Int) =
+                ComicsFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt(MarvelTags.CHARACTER_ID, characterId)
+                    }
+                }
     }
 }

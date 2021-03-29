@@ -23,6 +23,9 @@ enum class MarvelInfoError(var messageError: String, var codeError: Int) {
     ERROR_FORBIDDEN("Forbidden", 403) {
         override fun error() = Exception("Forbidden")
     },
+    ERROR_PARAMETER_ID("We don't recognize the parameter id", 409) {
+        override fun error() = Exception("We don't recognize the parameter id")
+    },
     ERROR_GENERIC("fail", 0) {
         override fun error() = Exception("Error Generic")
     };
@@ -43,8 +46,42 @@ enum class MarvelInfoError(var messageError: String, var codeError: Int) {
                 return ERROR_NOT_ALLOWED
             } else if (ERROR_FORBIDDEN.codeError == codeError && ERROR_FORBIDDEN.messageError == messageError) {
                 return ERROR_FORBIDDEN
+            } else if (ERROR_PARAMETER_ID.codeError == codeError && ERROR_PARAMETER_ID.messageError == messageError) {
+                return  ERROR_PARAMETER_ID
             } else {
-                return ERROR_FORBIDDEN
+                return ERROR_GENERIC
+            }
+        }
+
+        fun showError(messageError: String): MarvelInfoError {
+            when {
+                ERROR_API_KEY.messageError == messageError -> {
+                    return ERROR_API_KEY
+                }
+                ERROR_HASH.messageError == messageError -> {
+                    return ERROR_HASH
+                }
+                ERROR_TIMESTAMP.messageError == messageError -> {
+                    return ERROR_TIMESTAMP
+                }
+                ERROR_REFERER.messageError == messageError -> {
+                    return ERROR_REFERER
+                }
+                ERROR_INVALID_HASH.messageError == messageError -> {
+                    return ERROR_INVALID_HASH
+                }
+                ERROR_NOT_ALLOWED.messageError == messageError -> {
+                    return ERROR_NOT_ALLOWED
+                }
+                ERROR_FORBIDDEN.messageError == messageError -> {
+                    return ERROR_FORBIDDEN
+                }
+                ERROR_PARAMETER_ID.messageError == messageError -> {
+                    return ERROR_PARAMETER_ID
+                }
+                else -> {
+                    return ERROR_GENERIC
+                }
             }
         }
     }

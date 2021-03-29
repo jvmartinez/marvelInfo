@@ -2,6 +2,7 @@ package com.jvmartinez.marvelinfo.core.data.remote.apiMarvel
 
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RepositoryMarvelContract {
@@ -11,13 +12,21 @@ interface RepositoryMarvelContract {
         @Query("ts") ts: Int,
         @Query("apikey") key: String,
         @Query("hash") hash: String
-    ): Call<ResponseMarvel>
+    ) : Call<ResponseMarvel>
 
-    @GET("v1/public/characters/")
+    @GET("v1/public/characters/{characterId}")
     fun findCharacterById(
-        @Query("characterId") id: String,
-        @Query("ts") ts: Int,
-        @Query("apikey") key: String,
-        @Query("hash") hash: String
-    ): Call<ResponseMarvel>
+            @Path("characterId") id: Int,
+            @Query("ts") ts: Int,
+            @Query("apikey") key: String,
+            @Query("hash") hash: String
+    ) : Call<ResponseMarvel>
+
+    @GET("v1/public/characters/{characterId}/comics")
+    fun findAllComicsByCharacter(
+            @Path("characterId") id: Int,
+            @Query("ts") ts: Int,
+            @Query("apikey") key: String,
+            @Query("hash") hash: String
+    ) : Call<ResponseMarvelComic>
 }

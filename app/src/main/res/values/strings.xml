@@ -16,4 +16,12 @@
     <string name="message_error_forbidden">Occurs when a user with an otherwise authenticated request attempts to access an endpoint to which they do not have access.</string>
     <string name="todo">TODO</string>
     <string name="message_not_description">Description not available.</string>
+    <string name="message_error_select_character">I can\'t get the information of the character I select</string>
+    <string name="lblComics">Comics</string>
+    <string name="lblSeries">Series</string>
+    <string name="message_error_paramenter">We don\'t recognize the parameter id</string>
+    <string name="lblEvents">Events</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lblIrWeb">Go web</string>
 </resources>

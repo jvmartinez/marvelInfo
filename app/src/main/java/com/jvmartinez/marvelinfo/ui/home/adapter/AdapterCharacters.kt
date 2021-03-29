@@ -10,9 +10,11 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.model.Result
+import com.jvmartinez.marvelinfo.ui.home.HomeActions
 import kotlinx.android.synthetic.main.item_character.view.*
 
-class AdapterCharacters(private var characters: List<Result>) :
+class AdapterCharacters(private var characters: List<Result>,
+                        private val homeActions: HomeActions) :
         RecyclerView.Adapter<AdapterCharacters.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -59,6 +61,10 @@ class AdapterCharacters(private var characters: List<Result>) :
                 itemView.descriptionCharacter.text = itemView.resources.getString(R.string.message_not_description)
             }
             itemView.modifiedCharacter.text = result.modified
+
+            itemView.setOnClickListener {
+                homeActions.onShowCharacter(result.id)
+            }
         }
     }
 }
