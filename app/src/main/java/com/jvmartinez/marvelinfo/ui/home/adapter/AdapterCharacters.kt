@@ -42,6 +42,12 @@ class AdapterCharacters(private var characters: MutableList<Result>,
         }
     }
 
+    fun onDataSearch(results: List<Result>) {
+        this.characters.clear()
+        this.characters.addAll(results)
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun onBindView(result: Result) {
             val url = "${result.thumbnail.path}/portrait_uncanny.${result.thumbnail.extension}"
@@ -51,7 +57,7 @@ class AdapterCharacters(private var characters: MutableList<Result>,
             Glide.with(itemView)
                     .load(url)
                     .placeholder(R.drawable.ic_marvel_studios_2016_logo)
-                    .error(R.drawable.ic_baseline_mood_bad_120)
+                    .error(R.drawable.ic_deadpool_logo_150_150)
                     .transform(transformation)
                     .into(itemView.photoCharacter)
             itemView.nameCharacter.text = result.name

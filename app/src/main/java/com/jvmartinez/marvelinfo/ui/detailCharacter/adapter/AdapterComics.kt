@@ -51,7 +51,7 @@ class AdapterComics(private var comics: List<ComicResult>,
             Glide.with(itemView)
                     .load(url)
                     .placeholder(R.drawable.ic_marvel_studios_2016_logo)
-                    .error(R.drawable.ic_baseline_mood_bad_120)
+                    .error(R.drawable.ic_deadpool_logo_150_150)
                     .transform(transformation)
                     .into(itemView.photoComic)
             itemView.titleComic.text = comicResult.title

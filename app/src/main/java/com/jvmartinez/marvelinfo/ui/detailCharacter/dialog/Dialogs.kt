@@ -25,7 +25,7 @@ object Dialogs {
         Glide.with(dialogView)
                 .load(url)
                 .placeholder(R.drawable.ic_marvel_studios_2016_logo)
-                .error(R.drawable.ic_baseline_mood_bad_120)
+                .error(R.drawable.ic_deadpool_logo_150_150)
                 .into(photoComic)
         title.text = comic.title
         if  (comic.textObjects.isNotEmpty()) {

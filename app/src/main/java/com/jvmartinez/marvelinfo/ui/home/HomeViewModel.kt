@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
 import com.jvmartinez.marvelinfo.core.data.remote.repository.RepositoryMarvel
+import com.jvmartinez.marvelinfo.ui.base.BaseEnum
 import com.jvmartinez.marvelinfo.utils.MarvelInfoError
 import io.reactivex.schedulers.Schedulers
 
@@ -13,48 +14,58 @@ class HomeViewModel(private val repository: RepositoryMarvel) : ViewModel() {
     val checkResponse: LiveData<ResponseMarvel>
         get() = responseLiveData
 
-    private var statusHomeError: MutableLiveData<HomeEnum> = MutableLiveData()
-    val checkError: LiveData<HomeEnum>
+    private var statusHomeError: MutableLiveData<BaseEnum> = MutableLiveData()
+    val checkError: LiveData<BaseEnum>
         get() = statusHomeError
 
+    private var responseLiveDataByName: MutableLiveData<ResponseMarvel> = MutableLiveData()
+    val checkResponseByName: LiveData<ResponseMarvel>
+        get() = responseLiveDataByName
     private var total: Int = 1
 
-    fun findCharacters(offset: Int) {
-        if (offset != this.total) {
-            repository.findAllCharacter(offset)
+    fun findCharacters(offset: Int, nameCharacter: String? = null) {
+        if (nameCharacter.isNullOrEmpty()) {
+            if (offset != this.total) {
+                repository.findAllCharacter(offset)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .subscribe(::processFindCharacters, ::errorProcessFindCharacters)
+            }
+        } else {
+            repository.findAllCharacter(offset, nameCharacter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
-                .subscribe(::processFindCharacters, ::errorProcessFindCharacters)
+                .subscribe(::processFindCharactersByName, ::errorProcessFindCharacters)
         }
     }
 
     private fun errorProcessFindCharacters(throwable: Throwable?) {
-        when (MarvelInfoError.valueOf(throwable?.message.toString())) {
+        when (MarvelInfoError.showError(throwable?.message.toString())) {
             MarvelInfoError.ERROR_API_KEY -> {
-                statusHomeError.postValue(HomeEnum.ERROR_API_KEY)
+                statusHomeError.postValue(BaseEnum.ERROR_API_KEY)
             }
             MarvelInfoError.ERROR_HASH ->  {
-                statusHomeError.postValue(HomeEnum.ERROR_HASH)
+                statusHomeError.postValue(BaseEnum.ERROR_HASH)
             }
             MarvelInfoError.ERROR_TIMESTAMP ->  {
-                statusHomeError.postValue(HomeEnum.ERROR_TIMESTAMP)
+                statusHomeError.postValue(BaseEnum.ERROR_TIMESTAMP)
             }
             MarvelInfoError.ERROR_REFERER ->  {
-                statusHomeError.postValue(HomeEnum.ERROR_REFERER)
+                statusHomeError.postValue(BaseEnum.ERROR_REFERER)
             }
             MarvelInfoError.ERROR_INVALID_HASH -> {
-                statusHomeError.postValue(HomeEnum.ERROR_INVALID_HASH)
+                statusHomeError.postValue(BaseEnum.ERROR_INVALID_HASH)
             }
             MarvelInfoError.ERROR_NOT_ALLOWED -> {
-                statusHomeError.postValue(HomeEnum.ERROR_NOT_ALLOWED)
+                statusHomeError.postValue(BaseEnum.ERROR_NOT_ALLOWED)
             }
             MarvelInfoError.ERROR_FORBIDDEN -> {
-                statusHomeError.postValue(HomeEnum.ERROR_FORBIDDEN)
+                statusHomeError.postValue(BaseEnum.ERROR_FORBIDDEN)
             }
             MarvelInfoError.ERROR_GENERIC -> {
-                statusHomeError.postValue(HomeEnum.ERROR_GENERIC)
+                statusHomeError.postValue(BaseEnum.ERROR_GENERIC)
             } else -> {
-                statusHomeError.postValue(HomeEnum.ERROR_GENERIC)
+                statusHomeError.postValue(BaseEnum.ERROR_GENERIC)
             }
         }
     }
@@ -65,6 +76,22 @@ class HomeViewModel(private val repository: RepositoryMarvel) : ViewModel() {
                  total = it
              }
          }
-        responseLiveData.postValue(responseMarvel)
+        responseMarvel?.data.let { characters ->
+            if (characters?.results?.isEmpty() == true) {
+                statusHomeError.postValue(BaseEnum.EMPTY_DATA)
+            } else {
+                responseLiveData.postValue(responseMarvel)
+            }
+        }
+    }
+
+    private fun processFindCharactersByName(responseMarvel: ResponseMarvel?) {
+        responseMarvel?.data.let { characters ->
+            if (characters?.results?.isEmpty() == true) {
+                statusHomeError.postValue(BaseEnum.EMPTY_DATA)
+            } else {
+                responseLiveDataByName.postValue(responseMarvel)
+            }
+        }
     }
 }

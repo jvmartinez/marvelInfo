@@ -1,12 +1,14 @@
 package com.jvmartinez.marvelinfo.ui.home
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
 import com.jvmartinez.marvelinfo.ui.base.BaseActivity
+import com.jvmartinez.marvelinfo.ui.base.BaseEnum
 import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterActivity
 import com.jvmartinez.marvelinfo.ui.home.adapter.AdapterCharacters
 import com.jvmartinez.marvelinfo.utils.MarvelInfoUtils
@@ -44,63 +46,89 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
                 }
             }
         })
+
+        searchCharacter.setOnCloseListener(object : android.widget.SearchView.OnCloseListener,
+            SearchView.OnCloseListener {
+            override fun onClose(): Boolean {
+                showLoading()
+                homeViewModel.findCharacters(0)
+                return false
+            }
+
+        })
     }
 
     override fun onObserver() {
         homeViewModel.checkResponse.observe(::getLifecycle, ::showCharacters)
+        homeViewModel.checkResponseByName.observe(::getLifecycle, :: showCharacterByNme)
         homeViewModel.checkError.observe(::getLifecycle, ::showErrorHome)
     }
 
-    private fun showErrorHome(homeEnum: HomeEnum?) {
+    private fun showCharacterByNme(responseMarvel: ResponseMarvel?) {
         hideLoading()
-        when (homeEnum) {
-            HomeEnum.ERROR_API_KEY -> {
+        if (responseMarvel != null) {
+            customError.visibility = View.GONE
+            adapterCharacters.onDataSearch(responseMarvel.data.results)
+        }
+    }
+
+    private fun showErrorHome(baseEnum: BaseEnum?) {
+        hideLoading()
+        when (baseEnum) {
+            BaseEnum.ERROR_API_KEY -> {
                 showMessage(
                     getString(R.string.title_notification),
                     getString(R.string.message_error_api)
                 )
             }
-            HomeEnum.ERROR_HASH -> {
+            BaseEnum.ERROR_HASH -> {
                 showMessage(
                     getString(R.string.title_notification),
                     getString(R.string.message_error_hash)
                 )
             }
-            HomeEnum.ERROR_TIMESTAMP -> {
+            BaseEnum.ERROR_TIMESTAMP -> {
                 showMessage(
                     getString(R.string.title_notification),
                     getString(R.string.message_error_timestamp)
                 )
             }
-            HomeEnum.ERROR_REFERER -> {
+            BaseEnum.ERROR_REFERER -> {
                 showMessage(
                     getString(R.string.title_notification),
                     getString(R.string.message_error_referer)
                 )
             }
-            HomeEnum.ERROR_INVALID_HASH -> {
+            BaseEnum.ERROR_INVALID_HASH -> {
                 showMessage(
                     getString(R.string.title_notification),
                     getString(R.string.message_error_invalid_hash)
                 )
             }
-            HomeEnum.ERROR_NOT_ALLOWED -> {
+            BaseEnum.ERROR_NOT_ALLOWED -> {
                 showMessage(
                     getString(R.string.title_notification),
                     getString(R.string.message_error_not_allowed)
                 )
             }
-            HomeEnum.ERROR_FORBIDDEN -> {
+            BaseEnum.ERROR_FORBIDDEN -> {
                 showMessage(
                     getString(R.string.title_notification),
                     getString(R.string.message_error_forbidden)
                 )
             }
-            HomeEnum.ERROR_GENERIC -> {
+            BaseEnum.ERROR_GENERIC -> {
                 showMessage(
                     getString(R.string.title_notification),
                     getString(R.string.message_error_generic)
                 )
+            }
+            BaseEnum.ERROR_PARAMETER -> {
+
+            }
+            BaseEnum.EMPTY_DATA -> {
+                adapterCharacters.onDataSearch(mutableListOf())
+                customError.visibility = View.VISIBLE
             }
         }
     }
@@ -108,6 +136,7 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
     private fun showCharacters(responseMarvel: ResponseMarvel?) {
         hideLoading()
         if (::adapterCharacters.isInitialized) {
+            customError.visibility = View.GONE
             adapterCharacters.onData(responseMarvel?.data?.results)
         }
     }
@@ -130,6 +159,8 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+        showLoading()
+        homeViewModel.findCharacters(0, query)
         return false
     }
 
