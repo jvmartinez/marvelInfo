@@ -5,7 +5,7 @@
     style="@style/Theme.MarvelInfo.Activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.detailCharacter.fragment.comic.ComicsFragment">
+    tools:context=".ui.detailCharacter.fragment.info.InfoFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewComics"

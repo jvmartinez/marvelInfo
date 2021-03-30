@@ -9,42 +9,49 @@ import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.jvmartinez.marvelinfo.R
-import com.jvmartinez.marvelinfo.core.model.ComicResult
-import com.jvmartinez.marvelinfo.ui.detailCharacter.fragment.comic.ComicActions
+import com.jvmartinez.marvelinfo.core.model.InfoGenericResult
+import com.jvmartinez.marvelinfo.ui.detailCharacter.fragment.info.InfoActions
 import kotlinx.android.synthetic.main.item_comics_character.view.*
 
-class AdapterComics(private var comics: List<ComicResult>,
-                    private var comicActions: ComicActions) :
-        RecyclerView.Adapter<AdapterComics.ViewHolder>() {
+class AdapterInfo(private var data: MutableList<InfoGenericResult>,
+                  private var infoActions: InfoActions) :
+        RecyclerView.Adapter<AdapterInfo.ViewHolder>() {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterComics.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterInfo.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_comics_character, parent, false)
         return ViewHolder(view)
     }
 
-    fun onData(comics: List<ComicResult>) {
-        this.comics = comics
+    fun onData(infoGenerics: List<InfoGenericResult>) {
+        this.data.clear()
+        this.data.addAll(infoGenerics)
         notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: AdapterComics.ViewHolder, position: Int) {
-        holder.onBindView(comics[position])
+    override fun onBindViewHolder(holder: AdapterInfo.ViewHolder, position: Int) {
+        holder.onBindView(data[position])
     }
 
     override fun getItemCount(): Int {
-        return if (comics.isEmpty()) {
+        return if (data.isEmpty()) {
             0
         } else {
-            comics.size
+            data.size
         }
+    }
+
+    fun onDataSeries(series: List<InfoGenericResult>) {
+        this.data.clear()
+        this.data.addAll(series)
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView) {
 
-        fun onBindView(comicResult: ComicResult) {
-            val url = "${comicResult.thumbnail.path}/portrait_uncanny.${comicResult.thumbnail.extension}"
+        fun onBindView(infoGenericResult: InfoGenericResult) {
+            val url = "${infoGenericResult.thumbnail.path}/portrait_uncanny.${infoGenericResult.thumbnail.extension}"
             val transformation = MultiTransformation(CenterCrop(), RoundedCorners(
                     itemView.resources.getDimension(R.dimen.standard_rounder).toInt())
             )
@@ -54,21 +61,21 @@ class AdapterComics(private var comics: List<ComicResult>,
                     .error(R.drawable.ic_deadpool_logo_150_150)
                     .transform(transformation)
                     .into(itemView.photoComic)
-            itemView.titleComic.text = comicResult.title
-            if (comicResult.description?.isNotEmpty() == true) {
-                itemView.descriptionComic.text = comicResult.description
+            itemView.titleComic.text = infoGenericResult.title
+            if (infoGenericResult.description?.isNotEmpty() == true) {
+                itemView.descriptionComic.text = infoGenericResult.description
             } else {
                 itemView.descriptionComic.text = itemView.resources.getString(R.string.message_not_description)
             }
             itemView.btnGoWeb.setOnClickListener {
-                comicResult.urls.forEach {
+                infoGenericResult.urls.forEach {
                     if (it.type == "detail") {
-                        comicActions.onGoWeb(it.url)
+                        infoActions.onGoWeb(it.url)
                     }
                 }
             }
             itemView.setOnClickListener {
-                comicActions.showDialogInfoComic(comicResult)
+                infoActions.showDialogInfoComic(infoGenericResult)
             }
         }
     }

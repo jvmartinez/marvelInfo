@@ -19,4 +19,10 @@ interface BaseContract {
      * @param  void : hide progressBar
      */
     fun hideLoading()
+
+    /**
+     * Open browser
+     * @param url: url of site to show
+     */
+     fun showBrowser(url: String)
 }

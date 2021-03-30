@@ -24,7 +24,11 @@ class DetailsCharacterViewModel(private val repository: RepositoryMarvel) : View
     val checkResponseComic: LiveData<ResponseMarvelComic>
         get() = responseComicLiveData
 
-    fun findCharacterById(characterId : Int) {
+    private var responseSeriesLiveData: MutableLiveData<ResponseMarvelComic> = MutableLiveData()
+    val checkResponseSeries: LiveData<ResponseMarvelComic>
+        get() = responseSeriesLiveData
+
+    fun findCharacterById(characterId: Int) {
         repository.findCharacterById(characterId)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.newThread())
@@ -40,13 +44,13 @@ class DetailsCharacterViewModel(private val repository: RepositoryMarvel) : View
             MarvelInfoError.ERROR_API_KEY -> {
                 statusDetailsCharacterError.postValue(BaseEnum.ERROR_API_KEY)
             }
-            MarvelInfoError.ERROR_HASH ->  {
+            MarvelInfoError.ERROR_HASH -> {
                 statusDetailsCharacterError.postValue(BaseEnum.ERROR_HASH)
             }
-            MarvelInfoError.ERROR_TIMESTAMP ->  {
+            MarvelInfoError.ERROR_TIMESTAMP -> {
                 statusDetailsCharacterError.postValue(BaseEnum.ERROR_TIMESTAMP)
             }
-            MarvelInfoError.ERROR_REFERER ->  {
+            MarvelInfoError.ERROR_REFERER -> {
                 statusDetailsCharacterError.postValue(BaseEnum.ERROR_REFERER)
             }
             MarvelInfoError.ERROR_INVALID_HASH -> {
@@ -67,11 +71,25 @@ class DetailsCharacterViewModel(private val repository: RepositoryMarvel) : View
         }
     }
 
-    fun findAllComics(characterId: Int) {
-        repository.findAllComicsByCharacter(characterId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(::processComics, ::errorProcess)
+    fun findAllComics(characterId: Int, typeAction: Int) {
+        when (typeAction) {
+            0 -> {
+                repository.findAllComicsByCharacter(characterId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .subscribe(::processComics, ::errorProcess)
+            }
+            1 -> {
+                repository.findAllSeriesByCharacter(characterId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .subscribe(::processSeries, ::errorProcess)
+            }
+        }
+    }
+
+    private fun processSeries(responseMarvelComic: ResponseMarvelComic?) {
+        responseSeriesLiveData.postValue(responseMarvelComic)
     }
 
     private fun processComics(responseMarvelComic: ResponseMarvelComic?) {

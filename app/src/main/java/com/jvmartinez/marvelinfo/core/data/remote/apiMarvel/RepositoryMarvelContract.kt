@@ -31,4 +31,13 @@ interface RepositoryMarvelContract {
             @Query("apikey") key: String,
             @Query("hash") hash: String
     ) : Call<ResponseMarvelComic>
+
+    @GET("v1/public/characters/{characterId}/series")
+    fun findAllSeriesByCharacter(
+        @Path("characterId") id: Int,
+        @Query("ts") ts: Int,
+        @Query("apikey") key: String,
+        @Query("hash") hash: String
+    ) : Call<ResponseMarvelComic>
+
 }

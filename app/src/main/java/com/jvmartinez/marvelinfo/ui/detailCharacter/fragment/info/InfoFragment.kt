@@ -1,79 +1,68 @@
-package com.jvmartinez.marvelinfo.ui.detailCharacter
+package com.jvmartinez.marvelinfo.ui.detailCharacter.fragment.info
 
 import android.os.Bundle
-import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayoutMediator
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jvmartinez.marvelinfo.R
-import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
-import com.jvmartinez.marvelinfo.ui.base.BaseActivity
+import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvelComic
+import com.jvmartinez.marvelinfo.core.model.InfoGenericResult
 import com.jvmartinez.marvelinfo.ui.base.BaseEnum
-import com.jvmartinez.marvelinfo.ui.detailCharacter.adapter.AdapterCharacter
+import com.jvmartinez.marvelinfo.ui.base.BaseFragment
+import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterViewModel
+import com.jvmartinez.marvelinfo.ui.detailCharacter.adapter.AdapterInfo
+import com.jvmartinez.marvelinfo.ui.detailCharacter.dialog.Dialogs
 import com.jvmartinez.marvelinfo.utils.MarvelTags
-import kotlinx.android.synthetic.main.content_detail_character.*
+import kotlinx.android.synthetic.main.fragment_info_characte.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class DetailsCharacterActivity : BaseActivity() {
+class InfoFragment : BaseFragment(), InfoActions {
     private val detailsCharacterViewModel by viewModel<DetailsCharacterViewModel>()
-    private lateinit var adapterCharacter: AdapterCharacter
-    private lateinit var extra: Bundle
-    override fun layoutId() = R.layout.activity_details_character
+    private var characterId: Int? = 0
+    private var typeAction: Int? = 0
+    private lateinit var adapterInfo: AdapterInfo
 
-    override fun onSetup() {
-        showLoading()
-        extra = intent.extras!!
-        detailsCharacterViewModel.findCharacterById(extra.getInt(MarvelTags.CHARACTER_ID, 0))
+    override fun getLayoutId() = R.layout.fragment_info_characte
+
+    override fun onSetup(view: View) {
+        characterId?.let {
+            typeAction?.let { actionType ->
+                showLoading()
+                detailsCharacterViewModel.findAllComics(it, actionType)
+            }
+        }
         onAdapter()
-        onCustomUI()
     }
 
-    private fun onCustomUI() {
-
-        TabLayoutMediator(itemsCharacter, contentCharacter) { tab, position ->
-            contentCharacter.setCurrentItem(tab.position, true)
-            showLoading()
-            tab.text = when (position) {
-                0 -> {
-                    getString(R.string.lblComics)
-                }
-                1 -> {
-                    getString(R.string.lblSeries)
-                }
-                else -> {
-                    getString(R.string.lblComics)
-                }
-            }
-        }.attach()
+    override fun onSetup() {
+        arguments?.let {
+            characterId = it.getInt(MarvelTags.CHARACTER_ID)
+            typeAction = it.getInt(MarvelTags.TYPE_INFO_CHARACTER)
+        }
     }
 
     private fun onAdapter() {
-        adapterCharacter = AdapterCharacter(
-            itemsCharacter.tabCount,
-            extra.getInt(MarvelTags.CHARACTER_ID, 0),
-            this
-        )
-        contentCharacter.adapter = adapterCharacter
+        adapterInfo = AdapterInfo(mutableListOf(), this)
+        recyclerViewComics.layoutManager = LinearLayoutManager(context)
+        recyclerViewComics.adapter = adapterInfo
     }
 
     override fun onObserver() {
-        detailsCharacterViewModel.checkResponse.observe(::getLifecycle, ::showCharacter)
+        detailsCharacterViewModel.checkResponseComic.observe(::getLifecycle, ::flowComics)
+        detailsCharacterViewModel.checkResponseSeries.observe(::getLifecycle, ::flowSeries)
         detailsCharacterViewModel.checkError.observe(::getLifecycle, ::showErrorDetailSCharacter)
     }
 
-    private fun showCharacter(responseMarvel: ResponseMarvel?) {
-        var url = ""
-        responseMarvel?.let {
-           url = "${it.data.results[0].thumbnail.path}/portrait_incredible.${it.data.results[0].thumbnail.extension}"
-            if (it.data.results[0].description.isNotEmpty()) {
-                infoCharacter.text = it.data.results[0].description
-            } else {
-                infoCharacter.text = getString(R.string.message_not_description)
-            }
+    private fun flowSeries(responseMarvelComic: ResponseMarvelComic?) {
+        responseMarvelComic?.data?.results?.let {
+            adapterInfo.onDataSeries(it)
         }
-        Glide.with(this)
-            .load(url)
-            .placeholder(R.drawable.ic_marvel_studios_2016_logo)
-            .error(R.drawable.ic_deadpool_logo_150_150)
-            .into(infoPhotoCharacter)
+        hideLoading()
+    }
+
+    private fun flowComics(responseMarvelComic: ResponseMarvelComic?) {
+        responseMarvelComic?.data?.results?.let {
+            adapterInfo.onData(it)
+        }
         hideLoading()
     }
 
@@ -135,5 +124,28 @@ class DetailsCharacterActivity : BaseActivity() {
                 )
             }
         }
+    }
+
+    override fun onGoWeb(url: String) {
+        showBrowser(url)
+    }
+
+    override fun showDialogInfoComic(infoGeneric: InfoGenericResult) {
+        context?.let {
+            view?.let { view ->
+                Dialogs.dialogInfo(it, view, infoGeneric)
+            }
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(characterId: Int, typeAction: Int) =
+            InfoFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(MarvelTags.CHARACTER_ID, characterId)
+                    putInt(MarvelTags.TYPE_INFO_CHARACTER, typeAction)
+                }
+            }
     }
 }

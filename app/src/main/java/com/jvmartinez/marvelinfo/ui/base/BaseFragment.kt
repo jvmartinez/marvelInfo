@@ -1,6 +1,9 @@
 package com.jvmartinez.marvelinfo.ui.base
 
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -67,6 +70,15 @@ abstract class BaseFragment : Fragment(), BaseContract  {
     override fun hideLoading() {
         if (loading != null) {
             loading.visibility = View.GONE
+        }
+    }
+
+    override fun showBrowser(url: String) {
+        try {
+            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(myIntent)
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
         }
     }
 }

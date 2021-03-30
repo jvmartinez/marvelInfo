@@ -9,11 +9,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.jvmartinez.marvelinfo.R
-import com.jvmartinez.marvelinfo.core.model.ComicResult
+import com.jvmartinez.marvelinfo.core.model.InfoGenericResult
 
 object Dialogs {
 
-    fun dialogComic(context: Context, view: View, comic: ComicResult) {
+    fun dialogInfo(context: Context, view: View, infoGeneric: InfoGenericResult) {
         val builder = AlertDialog.Builder(context)
         val dialogView: View = LayoutInflater.from(context).inflate(
                 R.layout.dialog_info_comic, view as ViewGroup?,
@@ -21,15 +21,15 @@ object Dialogs {
         val title: TextView = dialogView.findViewById(R.id.dialogTitleComic)
         val description: TextView = dialogView.findViewById(R.id.dialogDescriptionComic)
         val photoComic: ImageView = dialogView.findViewById(R.id.dialogPhotoComic)
-        val url = "${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}"
+        val url = "${infoGeneric.thumbnail.path}/portrait_uncanny.${infoGeneric.thumbnail.extension}"
         Glide.with(dialogView)
                 .load(url)
                 .placeholder(R.drawable.ic_marvel_studios_2016_logo)
                 .error(R.drawable.ic_deadpool_logo_150_150)
                 .into(photoComic)
-        title.text = comic.title
-        if  (comic.textObjects.isNotEmpty()) {
-            description.text = comic.textObjects[0].text
+        title.text = infoGeneric.title
+        if  (infoGeneric.textObjects?.isNotEmpty() == true) {
+            description.text = infoGeneric.textObjects[0].text
         }
         builder.setView(dialogView)
         builder.show()

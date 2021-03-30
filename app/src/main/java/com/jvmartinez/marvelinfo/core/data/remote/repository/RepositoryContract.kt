@@ -20,4 +20,9 @@ interface RepositoryContract {
      * Find all comics of character
      */
     fun findAllComicsByCharacter(characterID: Int) : Observable<ResponseMarvelComic>
+
+    /**
+     * Find all series of character
+     */
+    fun findAllSeriesByCharacter(characterID: Int) : Observable<ResponseMarvelComic>
 }

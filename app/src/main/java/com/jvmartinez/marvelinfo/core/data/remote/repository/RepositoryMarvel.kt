@@ -153,4 +153,48 @@ class RepositoryMarvel(private val app: Application) : RepositoryContract {
         })
         return subject
     }
+
+    override fun findAllSeriesByCharacter(characterID: Int): Observable<ResponseMarvelComic> {
+        val subject = BehaviorSubject.create<ResponseMarvelComic>()
+        val responseComics =
+            ApiMarvelRepository.getInstance().getService().findAllSeriesByCharacter(
+                characterID,
+                1,
+                app.getString(R.string.public_key),
+                MarvelInfoUtils.createHash(app)
+            )
+        responseComics.enqueue(object : Callback<ResponseMarvelComic> {
+            override fun onResponse(
+                call: Call<ResponseMarvelComic>,
+                response: Response<ResponseMarvelComic>
+            ) {
+                when {
+                    response.isSuccessful -> {
+                        subject.onNext(response.body())
+                        subject.onComplete()
+                    }
+                    response.code() in 400..499 -> {
+                        val errorBody = JSONObject(response.errorBody()!!.string())
+                        subject.onError(
+                            MarvelInfoError.showError(
+                                errorBody.getString("status"),
+                                errorBody.getString("code").toInt()
+                            ).error()
+                        )
+                    }
+                    else -> {
+                        MarvelInfoError.showError(
+                            "fail",
+                            0
+                        ).error()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseMarvelComic>, t: Throwable) {
+                subject.onError(t)
+            }
+        })
+        return subject
+    }
 }

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/Theme.MarvelInfo.Activity"
+    android:background="@drawable/bg_border_red"
+    android:layout_margin="@dimen/standard_image_item"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
@@ -60,10 +61,8 @@
             app:layout_constraintTop_toBottomOf="@+id/titleComic" />
 
         <Button
-            android:id="@+id/btnGoWeb"
             style="@style/Theme.MarvelInfo.buttonToWeb"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:id="@+id/btnGoWeb"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

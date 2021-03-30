@@ -1,12 +1,16 @@
 package com.jvmartinez.marvelinfo.ui.base
 
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import com.jvmartinez.marvelinfo.R
 import kotlinx.android.synthetic.main.custom_loading.*
+
 
 abstract class BaseActivity : AppCompatActivity(), BaseContract {
 
@@ -45,6 +49,15 @@ abstract class BaseActivity : AppCompatActivity(), BaseContract {
     override fun hideLoading() {
         if (loading != null) {
             loading.visibility = View.GONE
+        }
+    }
+
+    override fun showBrowser(url: String) {
+        try {
+            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(myIntent)
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
         }
     }
 }

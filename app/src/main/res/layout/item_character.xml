@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/standard_activity"
-    style="@style/Theme.MarvelInfo.Activity">
+    android:background="@drawable/bg_border_red">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/contentImageCircle"

@@ -6,9 +6,9 @@ import java.io.Serializable
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DataComic(
-        @JsonProperty("count") val count: Int,
-        @JsonProperty("limit") val limit: Int,
-        @JsonProperty("offset") val offset: Int,
-        @JsonProperty("results")val results: List<ComicResult>,
-        @JsonProperty("total") val total: Int
+    @JsonProperty("count") val count: Int,
+    @JsonProperty("limit") val limit: Int,
+    @JsonProperty("offset") val offset: Int,
+    @JsonProperty("results")val results: List<InfoGenericResult>,
+    @JsonProperty("total") val total: Int
 ) : Serializable
