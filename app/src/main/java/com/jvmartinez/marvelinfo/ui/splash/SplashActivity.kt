@@ -1,6 +1,5 @@
 package com.jvmartinez.marvelinfo.ui.splash
 
-import android.content.Intent
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.ui.base.BaseActivity
 import com.jvmartinez.marvelinfo.ui.home.HomeActivity

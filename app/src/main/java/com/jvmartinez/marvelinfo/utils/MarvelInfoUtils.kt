@@ -1,6 +1,5 @@
 package com.jvmartinez.marvelinfo.utils
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
@@ -8,13 +7,6 @@ import android.os.Bundle
 import com.jvmartinez.marvelinfo.R
 import java.math.BigInteger
 import java.security.MessageDigest
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.util.*
 
 
 object MarvelInfoUtils {
