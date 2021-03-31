@@ -13,7 +13,7 @@ interface RepositoryMarvelContract {
         @Query("apikey") key: String,
         @Query("hash") hash: String,
         @Query("offset") offset: Int? =  null,
-        @Query("name") nameCharacter: String? = null
+        @Query("nameStartsWith") nameCharacter: String? = null
     ) : Call<ResponseMarvel>
 
     @GET("v1/public/characters/{characterId}")

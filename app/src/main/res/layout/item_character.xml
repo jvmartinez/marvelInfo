@@ -52,7 +52,7 @@
             android:layout_height="0dp"
             android:lines="4"
             android:ellipsize="end"
-            app:layout_constraintBottom_toTopOf="@+id/modifiedCharacter"
+            app:layout_constraintBottom_toTopOf="@+id/goCharacter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nameCharacter"
@@ -60,7 +60,7 @@
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:id="@+id/modifiedCharacter"
+            android:id="@+id/goCharacter"
             style="@style/Theme.MarvelInfo.LineText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -12,6 +12,7 @@ import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterViewModel
 import com.jvmartinez.marvelinfo.ui.detailCharacter.adapter.AdapterInfo
 import com.jvmartinez.marvelinfo.ui.detailCharacter.dialog.Dialogs
 import com.jvmartinez.marvelinfo.utils.MarvelTags
+import kotlinx.android.synthetic.main.content_detail_character.*
 import kotlinx.android.synthetic.main.fragment_info_characte.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -122,6 +123,9 @@ class InfoFragment : BaseFragment(), InfoActions {
                     getString(R.string.title_notification),
                     getString(R.string.message_error_paramenter)
                 )
+            }
+            BaseEnum.EMPTY_DATA -> {
+                contentError.visibility = View.VISIBLE
             }
         }
     }

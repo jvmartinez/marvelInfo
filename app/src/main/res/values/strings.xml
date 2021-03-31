@@ -25,5 +25,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lblIrWeb">Go web</string>
     <string name="hint_search">Search character</string>
-    <string name="message_empty">Character not found</string>
+    <string name="message_empty">Not found</string>
+    <string name="lblModified">Modified</string>
+    <string name="lblGoCharacter">Go Character</string>
 </resources>

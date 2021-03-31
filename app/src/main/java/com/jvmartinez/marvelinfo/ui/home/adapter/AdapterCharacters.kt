@@ -1,5 +1,6 @@
 package com.jvmartinez.marvelinfo.ui.home.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,7 @@ class AdapterCharacters(private var characters: MutableList<Result>,
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        @SuppressLint("SetTextI18n")
         fun onBindView(result: Result) {
             val url = "${result.thumbnail.path}/portrait_uncanny.${result.thumbnail.extension}"
             val transformation = MultiTransformation(CenterCrop(), RoundedCorners(
@@ -66,7 +68,7 @@ class AdapterCharacters(private var characters: MutableList<Result>,
             } else {
                 itemView.descriptionCharacter.text = itemView.resources.getString(R.string.message_not_description)
             }
-            itemView.modifiedCharacter.text = result.modified
+            itemView.goCharacter.text = itemView.context.getString(R.string.lblGoCharacter)
 
             itemView.setOnClickListener {
                 homeActions.onShowCharacter(result.id)

@@ -77,22 +77,25 @@ class DetailsCharacterViewModel(private val repository: RepositoryMarvel) : View
                 repository.findAllComicsByCharacter(characterId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
-                    .subscribe(::processComics, ::errorProcess)
+                    .subscribe(::processData, ::errorProcess)
             }
             1 -> {
                 repository.findAllSeriesByCharacter(characterId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
-                    .subscribe(::processSeries, ::errorProcess)
+                    .subscribe(::processData, ::errorProcess)
             }
         }
     }
 
-    private fun processSeries(responseMarvelComic: ResponseMarvelComic?) {
-        responseSeriesLiveData.postValue(responseMarvelComic)
-    }
+    private fun processData(responseMarvelComic: ResponseMarvelComic?) {
+        responseMarvelComic?.data?.let {
+            if (it.results.isNotEmpty()) {
+                responseSeriesLiveData.postValue(responseMarvelComic)
+            } else {
+                statusDetailsCharacterError.postValue(BaseEnum.EMPTY_DATA)
+            }
+        }
 
-    private fun processComics(responseMarvelComic: ResponseMarvelComic?) {
-        responseComicLiveData.postValue(responseMarvelComic)
     }
 }
