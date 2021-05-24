@@ -21,6 +21,7 @@ val viewModelModule = module {
  */
 val repositoryModule =  module {
     single {
+
         RepositoryMarvel(get())
     }
 }

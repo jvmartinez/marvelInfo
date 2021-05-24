@@ -4,11 +4,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.jvmartinez.marvelinfo.core.model.User
 import com.jvmartinez.marvelinfo.utils.MarvelTags
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import java.sql.DatabaseMetaData
 
 class FirebaseManager : FirebaseContract {
     private val firebaseAuth: FirebaseAuth by lazy {
