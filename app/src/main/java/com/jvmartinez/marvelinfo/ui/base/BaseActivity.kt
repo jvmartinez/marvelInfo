@@ -19,13 +19,10 @@ abstract class BaseActivity : AppCompatActivity(), BaseContract {
 
     protected abstract fun onSetup()
 
-    protected abstract fun onObserver()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())
         onSetup()
-        onObserver()
     }
 
     override fun showMessage(title: String, message: String) {
