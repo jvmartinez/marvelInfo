@@ -12,20 +12,24 @@ class SplashActivity : BaseActivity() {
     override fun layoutId() = R.layout.splash_main
 
     override fun onSetup() {
+        onObserver()
         splashViewModel.processValidateFlow()
     }
 
-    override fun onObserver() {
+    fun onObserver() {
         splashViewModel.check.observe(::getLifecycle, ::flowValidate)
     }
 
     private fun flowValidate(splashEnum: SplashEnum?) {
-        when(splashEnum) {
+        when (splashEnum) {
             SplashEnum.SUCCESS -> {
                 MarvelInfoUtils.callActivity(this, HomeActivity::class.java)
             }
-            SplashEnum.ERROR_GENERIC ->  {
-                showMessage(getString(R.string.title_notification), getString(R.string.message_error_generic))
+            SplashEnum.ERROR_GENERIC -> {
+                showMessage(
+                    getString(R.string.title_notification),
+                    getString(R.string.message_error_generic)
+                )
             }
         }
     }

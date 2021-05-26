@@ -14,9 +14,11 @@ import com.jvmartinez.marvelinfo.core.model.Result
 import com.jvmartinez.marvelinfo.ui.home.HomeActions
 import kotlinx.android.synthetic.main.item_character.view.*
 
-class AdapterCharacters(private var characters: MutableList<Result>,
-                        private val homeActions: HomeActions) :
-        RecyclerView.Adapter<AdapterCharacters.ViewHolder>() {
+class AdapterCharacters(
+    private var characters: MutableList<Result>,
+    private val homeActions: HomeActions
+) :
+    RecyclerView.Adapter<AdapterCharacters.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -24,10 +26,20 @@ class AdapterCharacters(private var characters: MutableList<Result>,
         return ViewHolder(view)
     }
 
-    fun onData(characters: List<Result>?) {
-        if (characters != null) {
-            this.characters.addAll(characters)
-            notifyDataSetChanged()
+    fun onData(characters: List<Result>?, search: Boolean) {
+
+        characters.let { list ->
+            list?.let {
+                if (!search) {
+                    this.characters.addAll(it)
+                    notifyDataSetChanged()
+                } else {
+                    this.characters.clear()
+                    this.characters.addAll(it)
+                    notifyDataSetChanged()
+                }
+
+            }
         }
     }
 
@@ -53,20 +65,23 @@ class AdapterCharacters(private var characters: MutableList<Result>,
         @SuppressLint("SetTextI18n")
         fun onBindView(result: Result) {
             val url = "${result.thumbnail.path}/portrait_uncanny.${result.thumbnail.extension}"
-            val transformation = MultiTransformation(CenterCrop(), RoundedCorners(
-                    itemView.resources.getDimension(R.dimen.standard_rounder).toInt())
+            val transformation = MultiTransformation(
+                CenterCrop(), RoundedCorners(
+                    itemView.resources.getDimension(R.dimen.standard_rounder).toInt()
+                )
             )
             Glide.with(itemView)
-                    .load(url)
-                    .placeholder(R.drawable.ic_marvel_studios_2016_logo)
-                    .error(R.drawable.ic_deadpool_logo_150_150)
-                    .transform(transformation)
-                    .into(itemView.photoCharacter)
+                .load(url)
+                .placeholder(R.drawable.ic_marvel_studios_2016_logo)
+                .error(R.drawable.ic_deadpool_logo_150_150)
+                .transform(transformation)
+                .into(itemView.photoCharacter)
             itemView.nameCharacter.text = result.name
             if (result.description.isNotEmpty()) {
                 itemView.descriptionCharacter.text = result.description
             } else {
-                itemView.descriptionCharacter.text = itemView.resources.getString(R.string.message_not_description)
+                itemView.descriptionCharacter.text =
+                    itemView.resources.getString(R.string.message_not_description)
             }
             itemView.goCharacter.text = itemView.context.getString(R.string.lblGoCharacter)
 

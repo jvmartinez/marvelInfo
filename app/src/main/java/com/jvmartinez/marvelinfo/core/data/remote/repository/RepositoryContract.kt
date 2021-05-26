@@ -2,27 +2,26 @@ package com.jvmartinez.marvelinfo.core.data.remote.repository
 
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvelComic
-import io.reactivex.Observable
 
 interface RepositoryContract {
     /**
      * Find all character
      */
-    fun findAllCharacter(offset: Int, nameCharacter: String? =  null) : Observable<ResponseMarvel>
+    suspend fun findAllCharacter(offset: Int, nameCharacter: String? =  null) : ResponseMarvel
 
     /**
      * Find all character by id
      * @param idCharacter: Id of character
      */
-    fun findCharacterById(characterID: Int) : Observable<ResponseMarvel>
+    suspend fun findCharacterById(characterID: Int) : ResponseMarvel
 
     /**
      * Find all comics of character
      */
-    fun findAllComicsByCharacter(characterID: Int) : Observable<ResponseMarvelComic>
+    suspend fun findAllComicsByCharacter(characterID: Int) : ResponseMarvelComic
 
     /**
      * Find all series of character
      */
-    fun findAllSeriesByCharacter(characterID: Int) : Observable<ResponseMarvelComic>
+    suspend fun findAllSeriesByCharacter(characterID: Int) : ResponseMarvelComic
 }

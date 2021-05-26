@@ -5,9 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
 
-open class ApiMarvel {
-    private lateinit var retrofit: Retrofit
-
+object RetrofitBuilder {
     private fun createClientApi(): OkHttpClient {
         val okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
         okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS)
@@ -15,12 +13,13 @@ open class ApiMarvel {
         return okHttpClientBuilder.build()
     }
 
-    protected fun getRetrofit(): Retrofit {
-        retrofit = Retrofit.Builder()
+    private fun getRetrofit(): Retrofit {
+        return Retrofit.Builder()
             .baseUrl("https://gateway.marvel.com:443/")
             .client(createClientApi())
             .addConverterFactory(JacksonConverterFactory.create())
             .build()
-        return retrofit
     }
+
+    val apiService: RepositoryMarvelContract = getRetrofit().create(RepositoryMarvelContract::class.java)
 }

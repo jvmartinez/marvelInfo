@@ -18,7 +18,6 @@ abstract class BaseFragment : Fragment(), BaseContract  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onSetup()
-        onObserver()
     }
 
     override fun onCreateView(
@@ -46,8 +45,6 @@ abstract class BaseFragment : Fragment(), BaseContract  {
      * @param
      */
     protected abstract fun onSetup()
-
-    protected abstract fun onObserver()
 
     override fun showMessage(title: String, message: String) {
         val dialog = AlertDialog.Builder(context)
