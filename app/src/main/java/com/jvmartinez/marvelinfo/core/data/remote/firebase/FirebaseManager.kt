@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.jvmartinez.marvelinfo.utils.MarvelInfoError
 import kotlinx.coroutines.tasks.await
 
 class FirebaseManager : FirebaseContract {
@@ -19,7 +20,7 @@ class FirebaseManager : FirebaseContract {
         return try {
             firebaseAuth.signInWithEmailAndPassword(email, password).await().user
         } catch (e: Exception) {
-            throw e
+            throw MarvelInfoError.showError(e.message.toString(), 401).error()
         }
     }
 

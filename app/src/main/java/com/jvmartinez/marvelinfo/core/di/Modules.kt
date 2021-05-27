@@ -19,7 +19,7 @@ import org.koin.dsl.module
  * Inject the view model
  */
 val viewModelModule = module {
-    viewModel { SplashViewModel() }
+    viewModel { SplashViewModel(get()) }
     viewModel { HomeViewModel(get()) }
     viewModel { DetailsCharacterViewModel(get()) }
     viewModel { LoginViewModel(get(), get()) }

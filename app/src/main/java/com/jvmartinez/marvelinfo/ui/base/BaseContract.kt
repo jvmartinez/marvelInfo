@@ -1,5 +1,7 @@
 package com.jvmartinez.marvelinfo.ui.base
 
+import android.content.DialogInterface
+
 interface BaseContract {
     /**
      * Notification dialog
@@ -7,6 +9,14 @@ interface BaseContract {
      * @param message : alert message
      */
     fun showMessage(title: String, message: String)
+
+    /**
+     * Notification dialog
+     * @param title : alert title
+     * @param message : alert message
+     * @param action: action dialog
+     */
+    fun showMessage(title: String, message: String, action: DialogInterface.OnClickListener)
 
     /**
      * Loading process for action

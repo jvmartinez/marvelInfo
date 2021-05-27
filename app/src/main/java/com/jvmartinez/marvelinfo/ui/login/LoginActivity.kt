@@ -32,7 +32,7 @@ class LoginActivity : BaseActivity() {
             is ApiResource.Failure -> {
                 showMessage(
                     getString(R.string.title_notification),
-                    getString(R.string.message_error_generic)
+                    apiResource.message
                 )
             }
             is ApiResource.Success -> {

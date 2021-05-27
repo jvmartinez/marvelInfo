@@ -1,5 +1,6 @@
 package com.jvmartinez.marvelinfo.ui.signUp
 
+import android.content.DialogInterface
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.ui.base.BaseActivity
 import com.jvmartinez.marvelinfo.ui.login.LoginActivity
@@ -28,7 +29,10 @@ class SignUpActivity : BaseActivity() {
 
     private fun flowSignUp(b: Boolean?) {
         if (b == true) {
-            MarvelInfoUtils.callActivity(this, LoginActivity::class.java)
+            val positiveButton = { dialog: DialogInterface, _: Int -> dialog
+                MarvelInfoUtils.callActivity(this, LoginActivity::class.java)
+            }
+            showMessage(getString(R.string.title_notification), getString(R.string.message_sign_up_success), positiveButton)
         } else {
             showMessage(
                 getString(R.string.title_notification),
