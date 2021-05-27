@@ -23,11 +23,11 @@ class FirebaseManager : FirebaseContract {
         }
     }
 
-    override suspend fun signUp(user: Map<String, String>): Boolean {
+    override suspend fun signUp(user: Map<String, String>, password: String): Boolean {
         return try {
             val userCreated = firebaseAuth.createUserWithEmailAndPassword(
                 user["email"].toString(),
-                user["password"].toString()
+                password
             ).await().user
             userCreated.let { userData ->
                 try {

@@ -32,4 +32,6 @@
     <string name="hint_password">Password</string>
     <string name="btn_login">Log In</string>
     <string name="btn_sign_up">Sign Up</string>
+    <string name="hint_name">Full name</string>
+    <string name="btn_create_user">Create account</string>
 </resources>
