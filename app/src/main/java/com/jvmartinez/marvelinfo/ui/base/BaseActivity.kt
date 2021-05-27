@@ -2,6 +2,7 @@ package com.jvmartinez.marvelinfo.ui.base
 
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -56,5 +57,15 @@ abstract class BaseActivity : AppCompatActivity(), BaseContract {
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
         }
+    }
+
+    override fun showMessage(title: String, message: String, action: DialogInterface.OnClickListener) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(R.string.btn_ok, action)
+            .setCancelable(false)
+            .create()
+        dialog.show()
     }
 }

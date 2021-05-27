@@ -13,6 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MarvelInfo"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.signUp.SignUpActivity"></activity>
+        <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.detailCharacter.DetailsCharacterActivity" />
         <activity android:name=".ui.home.HomeActivity" />
         <activity android:name=".ui.splash.SplashActivity">

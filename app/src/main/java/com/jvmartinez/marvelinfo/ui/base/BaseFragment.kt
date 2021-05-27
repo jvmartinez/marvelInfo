@@ -2,6 +2,7 @@ package com.jvmartinez.marvelinfo.ui.base
 
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,7 +14,7 @@ import androidx.fragment.app.Fragment
 import com.jvmartinez.marvelinfo.R
 import kotlinx.android.synthetic.main.custom_loading.*
 
-abstract class BaseFragment : Fragment(), BaseContract  {
+abstract class BaseFragment : Fragment(), BaseContract {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,8 +22,8 @@ abstract class BaseFragment : Fragment(), BaseContract  {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(getLayoutId(), container, false)
     }
@@ -34,6 +35,7 @@ abstract class BaseFragment : Fragment(), BaseContract  {
 
     @LayoutRes
     abstract fun getLayoutId(): Int
+
     /**
      * This action is called in the Create view created
      * @param view
@@ -48,13 +50,13 @@ abstract class BaseFragment : Fragment(), BaseContract  {
 
     override fun showMessage(title: String, message: String) {
         val dialog = AlertDialog.Builder(context)
-                .setTitle(title)
-                .setMessage(message)
-                .setNeutralButton(R.string.btn_ok) { view, _ ->
-                    view.dismiss()
-                }
-                .setCancelable(false)
-                .create()
+            .setTitle(title)
+            .setMessage(message)
+            .setNeutralButton(R.string.btn_ok) { view, _ ->
+                view.dismiss()
+            }
+            .setCancelable(false)
+            .create()
         dialog.show()
     }
 
@@ -77,5 +79,19 @@ abstract class BaseFragment : Fragment(), BaseContract  {
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
         }
+    }
+
+    override fun showMessage(
+        title: String,
+        message: String,
+        action: DialogInterface.OnClickListener
+    ) {
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(R.string.btn_ok, action)
+            .setCancelable(false)
+            .create()
+        dialog.show()
     }
 }

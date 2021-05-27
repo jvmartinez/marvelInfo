@@ -28,4 +28,11 @@
     <string name="message_empty">Not found</string>
     <string name="lblModified">Modified</string>
     <string name="lblGoCharacter">Go Character</string>
+    <string name="hint_e_mail">E-mail</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login">Log In</string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="hint_name">Full name</string>
+    <string name="btn_create_user">Create account</string>
+    <string name="message_sign_up_success">Register successfully</string>
 </resources>

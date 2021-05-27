@@ -28,6 +28,9 @@ enum class MarvelInfoError(var messageError: String, var codeError: Int) {
     },
     ERROR_GENERIC("fail", 0) {
         override fun error() = Exception("Error Generic")
+    },
+    ERROR_LOGIN("The password is invalid or the user does not have a password.", 401) {
+        override fun error() = Exception("Invalid username and password")
     };
 
     companion object {
@@ -47,7 +50,9 @@ enum class MarvelInfoError(var messageError: String, var codeError: Int) {
             } else if (ERROR_FORBIDDEN.codeError == codeError && ERROR_FORBIDDEN.messageError == messageError) {
                 return ERROR_FORBIDDEN
             } else if (ERROR_PARAMETER_ID.codeError == codeError && ERROR_PARAMETER_ID.messageError == messageError) {
-                return  ERROR_PARAMETER_ID
+                return ERROR_PARAMETER_ID
+            } else if (ERROR_LOGIN.codeError == codeError && ERROR_LOGIN.messageError == messageError) {
+                return ERROR_LOGIN
             } else {
                 return ERROR_GENERIC
             }
@@ -79,7 +84,9 @@ enum class MarvelInfoError(var messageError: String, var codeError: Int) {
                 ERROR_PARAMETER_ID.messageError == messageError -> {
                     return ERROR_PARAMETER_ID
                 }
-                else -> {
+                ERROR_LOGIN.messageError == messageError -> {
+                    return ERROR_LOGIN
+                } else -> {
                     return ERROR_GENERIC
                 }
             }

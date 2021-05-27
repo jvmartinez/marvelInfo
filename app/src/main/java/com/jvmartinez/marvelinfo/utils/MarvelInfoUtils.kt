@@ -35,4 +35,12 @@ object MarvelInfoUtils {
         currentActivity.startActivity(intent)
         currentActivity.finish()
     }
+
+    /**
+     * Method of valid E-mail
+     * @param email: email of user
+     */
+    fun isEmailValid(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
 }
