@@ -2,60 +2,47 @@ package com.jvmartinez.marvelinfo.core.data.remote.firebase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.jvmartinez.marvelinfo.utils.MarvelTags
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
 class FirebaseManager : FirebaseContract {
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
-     private val firebaseDatabase: DatabaseReference by lazy {
-        FirebaseDatabase.getInstance().reference
+    private val firebaseFirestore: FirebaseFirestore by lazy {
+        Firebase.firestore
     }
 
-    override fun login(email: String, password: String) : Observable<Boolean> {
-        val subject = BehaviorSubject.create<Boolean>()
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-            subject.onNext(it.isSuccessful)
-            subject.onComplete()
-        }.exception.let {
-            subject.onError(it)
+    override suspend fun login(email: String, password: String): FirebaseUser? {
+        return try {
+            firebaseAuth.signInWithEmailAndPassword(email, password).await().user
+        } catch (e: Exception) {
+            throw e
         }
-        return subject
     }
 
-    override fun signUp(user: Map<String, String>) : Observable<Boolean> {
-        val subject = BehaviorSubject.create<Boolean>()
-        firebaseAuth.createUserWithEmailAndPassword(user["email"].toString(),
-                user["password"].toString()).addOnCompleteListener {
-            if (it.isSuccessful) {
-                firebaseDatabase.database.let { dataBase ->
-                    dataBase.reference.child(MarvelTags.DATA_BASE_USER).setValue(user).addOnCompleteListener { resultDataBase ->
-                        subject.onNext(resultDataBase.isSuccessful)
-                        subject.onComplete()
-                    }
+    override suspend fun signUp(user: Map<String, String>): Boolean {
+        return try {
+            val userCreated = firebaseAuth.createUserWithEmailAndPassword(
+                user["email"].toString(),
+                user["password"].toString()
+            ).await().user
+            userCreated.let { userData ->
+                try {
+                    firebaseFirestore.collection("User").document(userData.uid).set(user).await()
+                    true
+                } catch (e: Exception) {
+                    false
                 }
-            } else {
-                subject.onNext(it.isSuccessful)
-                subject.onComplete()
             }
-        }.exception.let {
-            subject.onError(it)
+        } catch (e: Exception) {
+            false
         }
-        return subject
     }
 
-    override fun currentUser(): Observable<FirebaseUser> {
-        val subject = BehaviorSubject.create<FirebaseUser>()
-        if (firebaseAuth.currentUser == null) {
-            subject.onError(Exception("UserEmpty"))
-        } else {
-            subject.onNext(firebaseAuth.currentUser)
-            subject.onComplete()
-        }
-        return subject
+    override suspend fun currentUser(): FirebaseUser? {
+        return firebaseAuth.currentUser
     }
 }

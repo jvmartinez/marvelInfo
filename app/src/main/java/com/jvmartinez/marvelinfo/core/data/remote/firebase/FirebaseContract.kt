@@ -1,13 +1,12 @@
 package com.jvmartinez.marvelinfo.core.data.remote.firebase
 
 import com.google.firebase.auth.FirebaseUser
-import io.reactivex.Observable
 
 interface FirebaseContract {
 
-    fun login(email: String, password: String) : Observable<Boolean>
+    suspend fun login(email: String, password: String): FirebaseUser?
 
-    fun signUp(user: Map<String, String>) : Observable<Boolean>
+    suspend fun signUp(user: Map<String, String>): Boolean
 
-    fun currentUser() : Observable<FirebaseUser>
+    suspend fun currentUser(): FirebaseUser?
 }

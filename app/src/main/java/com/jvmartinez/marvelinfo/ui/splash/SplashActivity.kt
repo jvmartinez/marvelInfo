@@ -2,7 +2,7 @@ package com.jvmartinez.marvelinfo.ui.splash
 
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.ui.base.BaseActivity
-import com.jvmartinez.marvelinfo.ui.home.HomeActivity
+import com.jvmartinez.marvelinfo.ui.login.LoginActivity
 import com.jvmartinez.marvelinfo.utils.MarvelInfoUtils
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -23,7 +23,7 @@ class SplashActivity : BaseActivity() {
     private fun flowValidate(splashEnum: SplashEnum?) {
         when (splashEnum) {
             SplashEnum.SUCCESS -> {
-                MarvelInfoUtils.callActivity(this, HomeActivity::class.java)
+                MarvelInfoUtils.callActivity(this, LoginActivity::class.java)
             }
             SplashEnum.ERROR_GENERIC -> {
                 showMessage(

@@ -22,16 +22,4 @@
         app:lottie_speed="1"
         tools:ignore="MissingConstraints" />
 
-    <ImageView
-        android:id="@+id/imgLogoMarvel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_marvel_studios_2016_logo"
-        app:layout_constraintBottom_toBottomOf="@+id/lottieSplash"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lottieSplash"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
