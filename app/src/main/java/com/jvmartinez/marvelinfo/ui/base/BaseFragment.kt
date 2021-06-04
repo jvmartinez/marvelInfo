@@ -6,10 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.jvmartinez.marvelinfo.R
 import kotlinx.android.synthetic.main.custom_loading.*
@@ -21,20 +18,10 @@ abstract class BaseFragment : Fragment(), BaseContract {
         onSetup()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(getLayoutId(), container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onSetup(view)
     }
-
-    @LayoutRes
-    abstract fun getLayoutId(): Int
 
     /**
      * This action is called in the Create view created

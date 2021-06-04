@@ -8,6 +8,7 @@
     style="@style/Theme.MarvelInfo.Activity">
 
     <include
+        android:id="@+id/customSignUp"
         layout="@layout/custom_sign_up"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -7,22 +7,20 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewbinding.ViewBinding
 import com.jvmartinez.marvelinfo.R
 import kotlinx.android.synthetic.main.custom_loading.*
 
 
 abstract class BaseActivity : AppCompatActivity(), BaseContract {
-
-    @LayoutRes
-    abstract fun layoutId(): Int
+    abstract fun layoutId(): ViewBinding
 
     protected abstract fun onSetup()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layoutId())
+        setContentView(layoutId().root)
         onSetup()
     }
 

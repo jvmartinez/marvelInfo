@@ -53,14 +53,14 @@
         tools:ignore="MissingConstraints">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/itemComics"
+
             style="@style/Theme.MarvelInfo.TabItemInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lblComics" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/itemSeries"
+
             style="@style/Theme.MarvelInfo.TabItemInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

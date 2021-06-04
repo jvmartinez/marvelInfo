@@ -1,31 +1,37 @@
 package com.jvmartinez.marvelinfo.ui.detailCharacter
 
 import android.os.Bundle
+import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ApiResource
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
+import com.jvmartinez.marvelinfo.databinding.ActivityDetailsCharacterBinding
 import com.jvmartinez.marvelinfo.ui.base.BaseActivity
 import com.jvmartinez.marvelinfo.ui.detailCharacter.adapter.AdapterCharacter
 import com.jvmartinez.marvelinfo.ui.home.HomeActivity
 import com.jvmartinez.marvelinfo.utils.MarvelInfoError
 import com.jvmartinez.marvelinfo.utils.MarvelInfoUtils
 import com.jvmartinez.marvelinfo.utils.MarvelTags
-import kotlinx.android.synthetic.main.content_detail_character.*
-import kotlinx.android.synthetic.main.custom_toolbar.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class DetailsCharacterActivity : BaseActivity() {
+    private lateinit var binding: ActivityDetailsCharacterBinding
     private val detailsCharacterViewModel by viewModel<DetailsCharacterViewModel>()
     private lateinit var adapterCharacter: AdapterCharacter
-    private lateinit var extra: Bundle
+    private var extra: Bundle? = null
 
-    override fun layoutId() = R.layout.activity_details_character
+    override fun layoutId(): ViewBinding {
+        binding = ActivityDetailsCharacterBinding.inflate(layoutInflater)
+        return binding
+    }
 
     override fun onSetup() {
         showLoading()
-        extra = intent.extras!!
+        intent.extras.let {
+            extra = it
+        }
         onAdapter()
         onCustomUI()
         onClick()
@@ -33,30 +39,35 @@ class DetailsCharacterActivity : BaseActivity() {
     }
 
     private fun onObserver() {
-        detailsCharacterViewModel.findCharacterById(extra.getInt(MarvelTags.CHARACTER_ID, 0))
-            .observe(
-                ::getLifecycle,
-                ::showCharacter
-            )
+        extra.let {
+            it?.getInt(MarvelTags.CHARACTER_ID, 0)?.let { id ->
+                detailsCharacterViewModel.findCharacterById(id)
+                    .observe(
+                        ::getLifecycle,
+                        ::showCharacter
+                    )
+            }
+        }
     }
 
     private fun onClick() {
-        toolbar.setNavigationOnClickListener {
+        binding.customToolbar.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
     }
 
     private fun onCustomUI() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.customToolbar.toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayUseLogoEnabled(false)
         actionBar?.setDisplayShowTitleEnabled(true)
         actionBar?.setHomeButtonEnabled(true)
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
-        TabLayoutMediator(itemsCharacter, contentCharacter) { tab, position ->
-            contentCharacter.setCurrentItem(tab.position, true)
+        TabLayoutMediator(binding.customDetails.itemsCharacter, binding.customDetails.contentCharacter) { tab, position ->
+            binding.customDetails.contentCharacter.setCurrentItem(tab.position, true)
             showLoading()
+
             tab.text = when (position) {
                 0 -> {
                     getString(R.string.lblComics)
@@ -72,12 +83,15 @@ class DetailsCharacterActivity : BaseActivity() {
     }
 
     private fun onAdapter() {
-        adapterCharacter = AdapterCharacter(
-            itemsCharacter.tabCount,
-            extra.getInt(MarvelTags.CHARACTER_ID, 0),
-            this
-        )
-        contentCharacter.adapter = adapterCharacter
+        extra.let {
+            adapterCharacter = AdapterCharacter(
+                binding.customDetails.itemsCharacter.tabCount,
+                it?.getInt(MarvelTags.CHARACTER_ID, 0)!!,
+                this
+            )
+        }
+
+        binding.customDetails.contentCharacter.adapter = adapterCharacter
     }
 
     fun showCharacter(apiResource: ApiResource<ResponseMarvel>?) {
@@ -143,20 +157,20 @@ class DetailsCharacterActivity : BaseActivity() {
             is ApiResource.Success -> {
                 var url = ""
                 apiResource.let { resp ->
-                    toolbar.title = resp.data.data.results[0].name
+                    binding.customToolbar.toolbar.title = resp.data.data.results[0].name
                     url =
                         "${resp.data.data.results[0].thumbnail.path}/portrait_incredible.${resp.data.data.results[0].thumbnail.extension}"
                     if (resp.data.data.results[0].description.isNotEmpty()) {
-                        infoCharacter.text = resp.data.data.results[0].description
+                        binding.customDetails.infoCharacter.text = resp.data.data.results[0].description
                     } else {
-                        infoCharacter.text = getString(R.string.message_not_description)
+                        binding.customDetails.infoCharacter.text = getString(R.string.message_not_description)
                     }
                 }
                 Glide.with(this)
                     .load(url)
                     .placeholder(R.drawable.ic_marvel_studios_2016_logo)
                     .error(R.drawable.ic_deadpool_logo_150_150)
-                    .into(infoPhotoCharacter)
+                    .into(binding.customDetails.infoPhotoCharacter)
                 hideLoading()
             }
         }

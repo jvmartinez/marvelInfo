@@ -8,7 +8,7 @@
     tools:context=".ui.detailCharacter.DetailsCharacterActivity">
 
     <include
-        android:id="@+id/includeToolbar"
+        android:id="@+id/customToolbar"
         layout="@layout/custom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,22 +17,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/customDetails"
         layout="@layout/content_detail_character"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/includeToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/customToolbar" />
 
     <include
+        android:id="@+id/customLoading"
         layout="@layout/custom_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/include"
-        app:layout_constraintEnd_toEndOf="@+id/include"
-        app:layout_constraintStart_toStartOf="@+id/include"
+        app:layout_constraintBottom_toBottomOf="@+id/customDetails"
+        app:layout_constraintEnd_toEndOf="@+id/customDetails"
+        app:layout_constraintStart_toStartOf="@+id/customDetails"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
