@@ -8,6 +8,7 @@
     style="@style/Theme.MarvelInfo.Activity">
 
     <include
+        android:id="@+id/customLogin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         layout="@layout/custom_login"

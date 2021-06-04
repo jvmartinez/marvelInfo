@@ -11,8 +11,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.model.Result
+import com.jvmartinez.marvelinfo.databinding.ItemCharacterBinding
 import com.jvmartinez.marvelinfo.ui.home.HomeActions
-import kotlinx.android.synthetic.main.item_character.view.*
 
 class AdapterCharacters(
     private var characters: MutableList<Result>,
@@ -62,6 +62,7 @@ class AdapterCharacters(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding = ItemCharacterBinding.bind(itemView)
         @SuppressLint("SetTextI18n")
         fun onBindView(result: Result) {
             val url = "${result.thumbnail.path}/portrait_uncanny.${result.thumbnail.extension}"
@@ -75,15 +76,15 @@ class AdapterCharacters(
                 .placeholder(R.drawable.ic_marvel_studios_2016_logo)
                 .error(R.drawable.ic_deadpool_logo_150_150)
                 .transform(transformation)
-                .into(itemView.photoCharacter)
-            itemView.nameCharacter.text = result.name
+                .into(binding.photoCharacter)
+            binding.nameCharacter.text = result.name
             if (result.description.isNotEmpty()) {
-                itemView.descriptionCharacter.text = result.description
+                binding.descriptionCharacter.text = result.description
             } else {
-                itemView.descriptionCharacter.text =
+                binding.descriptionCharacter.text =
                     itemView.resources.getString(R.string.message_not_description)
             }
-            itemView.goCharacter.text = itemView.context.getString(R.string.lblGoCharacter)
+            binding.goCharacter.text = itemView.context.getString(R.string.lblGoCharacter)
 
             itemView.setOnClickListener {
                 homeActions.onShowCharacter(result.id)

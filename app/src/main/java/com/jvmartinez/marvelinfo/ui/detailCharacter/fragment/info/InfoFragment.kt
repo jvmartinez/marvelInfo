@@ -1,28 +1,39 @@
 package com.jvmartinez.marvelinfo.ui.detailCharacter.fragment.info
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ApiResource
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvelComic
 import com.jvmartinez.marvelinfo.core.model.InfoGenericResult
+import com.jvmartinez.marvelinfo.databinding.FragmentInfoCharacteBinding
 import com.jvmartinez.marvelinfo.ui.base.BaseFragment
 import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterViewModel
 import com.jvmartinez.marvelinfo.ui.detailCharacter.adapter.AdapterInfo
 import com.jvmartinez.marvelinfo.ui.detailCharacter.dialog.Dialogs
 import com.jvmartinez.marvelinfo.utils.MarvelInfoError
 import com.jvmartinez.marvelinfo.utils.MarvelTags
-import kotlinx.android.synthetic.main.fragment_info_characte.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class InfoFragment : BaseFragment(), InfoActions {
+class InfoFragment: BaseFragment(), InfoActions {
+    private var _binding: FragmentInfoCharacteBinding? = null
+    private val binding: FragmentInfoCharacteBinding
+        get() = _binding!!
     private val detailsCharacterViewModel by viewModel<DetailsCharacterViewModel>()
     private var characterId: Int? = 0
     private var typeAction: Int? = 0
     private lateinit var adapterInfo: AdapterInfo
 
-    override fun getLayoutId() = R.layout.fragment_info_characte
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentInfoCharacteBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onSetup(view: View) {
         characterId?.let {
@@ -44,8 +55,8 @@ class InfoFragment : BaseFragment(), InfoActions {
 
     private fun onAdapter() {
         adapterInfo = AdapterInfo(mutableListOf(), this)
-        recyclerViewComics.layoutManager = LinearLayoutManager(context)
-        recyclerViewComics.adapter = adapterInfo
+        binding.recyclerViewComics.layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewComics.adapter = adapterInfo
     }
 
     private fun flowComics(apiResource: ApiResource<ResponseMarvelComic>?) {
@@ -129,6 +140,10 @@ class InfoFragment : BaseFragment(), InfoActions {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding =  null
+    }
     companion object {
         @JvmStatic
         fun newInstance(characterId: Int, typeAction: Int) =

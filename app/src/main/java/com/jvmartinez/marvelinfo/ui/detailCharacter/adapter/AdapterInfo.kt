@@ -10,8 +10,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.model.InfoGenericResult
+import com.jvmartinez.marvelinfo.databinding.ItemComicsCharacterBinding
 import com.jvmartinez.marvelinfo.ui.detailCharacter.fragment.info.InfoActions
-import kotlinx.android.synthetic.main.item_comics_character.view.*
 
 class AdapterInfo(private var data: MutableList<InfoGenericResult>,
                   private var infoActions: InfoActions) :
@@ -49,6 +49,7 @@ class AdapterInfo(private var data: MutableList<InfoGenericResult>,
     }
 
     inner class ViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView) {
+         val binding = ItemComicsCharacterBinding.bind(itemView)
 
         fun onBindView(infoGenericResult: InfoGenericResult) {
             val url = "${infoGenericResult.thumbnail.path}/portrait_uncanny.${infoGenericResult.thumbnail.extension}"
@@ -60,14 +61,14 @@ class AdapterInfo(private var data: MutableList<InfoGenericResult>,
                     .placeholder(R.drawable.ic_marvel_studios_2016_logo)
                     .error(R.drawable.ic_deadpool_logo_150_150)
                     .transform(transformation)
-                    .into(itemView.photoComic)
-            itemView.titleComic.text = infoGenericResult.title
+                    .into(binding.photoComic)
+            binding.titleComic.text = infoGenericResult.title
             if (infoGenericResult.description?.isNotEmpty() == true) {
-                itemView.descriptionComic.text = infoGenericResult.description
+                binding.descriptionComic.text = infoGenericResult.description
             } else {
-                itemView.descriptionComic.text = itemView.resources.getString(R.string.message_not_description)
+                binding.descriptionComic.text = itemView.resources.getString(R.string.message_not_description)
             }
-            itemView.btnGoWeb.setOnClickListener {
+            binding.btnGoWeb.setOnClickListener {
                 infoGenericResult.urls.forEach {
                     if (it.type == "detail") {
                         infoActions.onGoWeb(it.url)

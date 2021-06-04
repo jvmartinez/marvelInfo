@@ -5,24 +5,30 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ApiResource
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
+import com.jvmartinez.marvelinfo.databinding.ActivityHomeBinding
 import com.jvmartinez.marvelinfo.ui.base.BaseActivity
 import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterActivity
 import com.jvmartinez.marvelinfo.ui.home.adapter.AdapterCharacters
 import com.jvmartinez.marvelinfo.utils.MarvelInfoError
 import com.jvmartinez.marvelinfo.utils.MarvelInfoUtils
 import com.jvmartinez.marvelinfo.utils.MarvelTags
-import kotlinx.android.synthetic.main.content_home.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener {
+    private lateinit var binding: ActivityHomeBinding
     private val homeViewModel by viewModel<HomeViewModel>()
     private lateinit var adapterCharacters: AdapterCharacters
     private var offset: Int = 0
     private var searchStatus = false
-    override fun layoutId() = R.layout.activity_home
+
+    override fun layoutId(): ViewBinding  {
+      binding = ActivityHomeBinding.inflate(layoutInflater)
+      return binding
+    }
 
     override fun onSetup() {
         homeViewModel.findCharacters(offset).observe(::getLifecycle, ::showCharacters)
@@ -33,11 +39,11 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
     }
 
     private fun customUI() {
-        searchCharacter.setOnQueryTextListener(this)
+        binding.customHome.searchCharacter.setOnQueryTextListener(this)
     }
 
     private fun onClick() {
-        recyclerViewCharacters.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.customHome.recyclerViewCharacters.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
@@ -49,7 +55,7 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
             }
         })
 
-        searchCharacter.setOnCloseListener(object : android.widget.SearchView.OnCloseListener,
+        binding.customHome.searchCharacter.setOnCloseListener(object : android.widget.SearchView.OnCloseListener,
             SearchView.OnCloseListener {
             override fun onClose(): Boolean {
                 showLoading()
@@ -124,12 +130,12 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
             }
             is ApiResource.Success -> {
                 if (::adapterCharacters.isInitialized) {
-                    customError.visibility = View.GONE
+                    binding.customHome.customError.root.visibility = View.GONE
                     apiResource.data.data.results.let {
                         adapterCharacters.onData(it,searchStatus)
                     }
                 } else {
-                    customError.visibility = View.VISIBLE
+                    binding.customHome.customError.root.visibility = View.VISIBLE
                 }
             }
         }
@@ -137,9 +143,9 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
 
     private fun onAdapter() {
         adapterCharacters = AdapterCharacters(mutableListOf(), this)
-        recyclerViewCharacters.layoutManager = LinearLayoutManager(this)
-        recyclerViewCharacters.setHasFixedSize(true)
-        recyclerViewCharacters.adapter = adapterCharacters
+        binding.customHome.recyclerViewCharacters.layoutManager = LinearLayoutManager(this)
+        binding.customHome.recyclerViewCharacters.setHasFixedSize(true)
+        binding.customHome.recyclerViewCharacters.adapter = adapterCharacters
     }
 
     override fun onShowCharacter(characterID: Int) {
