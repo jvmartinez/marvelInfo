@@ -16,6 +16,7 @@ Libraries implemented:
 * Retrofit
 * Firebase Analytics
 * Firebase Crashlytics
+* View Binding
 
 You can download the application at https://play.google.com/store/apps/details?id=com.jvmartinez.marvelinfo
 
