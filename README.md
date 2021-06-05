@@ -16,11 +16,10 @@ Libraries implemented:
 * Retrofit
 * Firebase Analytics
 * Firebase Crashlytics
-* Firebase Crashlytics
 * Firebase Authentication
 * Firebase Firestore
 * View Binding
-
+* Navigation Components
 You can download the application at https://play.google.com/store/apps/details?id=com.jvmartinez.marvelinfo
 
 Preview Viewo
