@@ -19,18 +19,6 @@ interface BaseContract {
     fun showMessage(title: String, message: String, action: DialogInterface.OnClickListener)
 
     /**
-     * Loading process for action
-     * @param  void : show progressBar
-     */
-    fun showLoading()
-
-    /**
-     * Hide the loading action
-     * @param  void : hide progressBar
-     */
-    fun hideLoading()
-
-    /**
      * Open browser
      * @param url: url of site to show
      */

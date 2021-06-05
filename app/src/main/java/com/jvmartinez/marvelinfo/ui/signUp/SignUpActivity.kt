@@ -5,9 +5,6 @@ import androidx.viewbinding.ViewBinding
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.databinding.ActivitySignUpBinding
 import com.jvmartinez.marvelinfo.ui.base.BaseActivity
-import com.jvmartinez.marvelinfo.ui.login.LoginActivity
-import com.jvmartinez.marvelinfo.utils.MarvelInfoUtils
-
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SignUpActivity : BaseActivity() {
@@ -36,9 +33,9 @@ class SignUpActivity : BaseActivity() {
     private fun flowSignUp(b: Boolean?) {
         if (b == true) {
             val positiveButton = { dialog: DialogInterface, _: Int -> dialog
-                MarvelInfoUtils.callActivity(this, LoginActivity::class.java)
+//                MarvelInfoUtils.callActivity(this, LoginActivity::class.java)
             }
-            showMessage(getString(R.string.title_notification), getString(R.string.message_sign_up_success), positiveButton)
+//            showMessage(getString(R.string.title_notification), getString(R.string.message_sign_up_success), positiveButton)
         } else {
             showMessage(
                 getString(R.string.title_notification),
