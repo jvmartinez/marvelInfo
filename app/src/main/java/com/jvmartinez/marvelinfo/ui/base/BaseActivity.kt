@@ -6,11 +6,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.jvmartinez.marvelinfo.R
-import kotlinx.android.synthetic.main.custom_loading.*
 
 
 abstract class BaseActivity : AppCompatActivity(), BaseContract {
@@ -36,17 +34,6 @@ abstract class BaseActivity : AppCompatActivity(), BaseContract {
         dialog.show()
     }
 
-    override fun showLoading() {
-        if (loading != null) {
-            loading.visibility = View.VISIBLE
-        }
-    }
-
-    override fun hideLoading() {
-        if (loading != null) {
-            loading.visibility = View.GONE
-        }
-    }
 
     override fun showBrowser(url: String) {
         try {

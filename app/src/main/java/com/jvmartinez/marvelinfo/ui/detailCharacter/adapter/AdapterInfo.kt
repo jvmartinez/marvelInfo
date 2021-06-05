@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.jvmartinez.marvelinfo.R
+import com.jvmartinez.marvelinfo.core.extension.load
 import com.jvmartinez.marvelinfo.core.model.InfoGenericResult
 import com.jvmartinez.marvelinfo.databinding.ItemComicsCharacterBinding
 import com.jvmartinez.marvelinfo.ui.detailCharacter.fragment.info.InfoActions
@@ -56,12 +56,7 @@ class AdapterInfo(private var data: MutableList<InfoGenericResult>,
             val transformation = MultiTransformation(CenterCrop(), RoundedCorners(
                     itemView.resources.getDimension(R.dimen.standard_rounder).toInt())
             )
-            Glide.with(itemView)
-                    .load(url)
-                    .placeholder(R.drawable.ic_marvel_studios_2016_logo)
-                    .error(R.drawable.ic_deadpool_logo_150_150)
-                    .transform(transformation)
-                    .into(binding.photoComic)
+            binding.photoComic.load(url)
             binding.titleComic.text = infoGenericResult.title
             if (infoGenericResult.description?.isNotEmpty() == true) {
                 binding.descriptionComic.text = infoGenericResult.description

@@ -5,29 +5,15 @@ import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import com.jvmartinez.marvelinfo.R
-import kotlinx.android.synthetic.main.custom_loading.*
 
 abstract class BaseFragment : Fragment(), BaseContract {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         onSetup()
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        onSetup(view)
-    }
-
-    /**
-     * This action is called in the Create view created
-     * @param view
-     */
-    protected abstract fun onSetup(view: View)
 
     /**
      * This action is called in the Create view
@@ -45,18 +31,6 @@ abstract class BaseFragment : Fragment(), BaseContract {
             .setCancelable(false)
             .create()
         dialog.show()
-    }
-
-    override fun showLoading() {
-        if (loading != null) {
-            loading.visibility = View.VISIBLE
-        }
-    }
-
-    override fun hideLoading() {
-        if (loading != null) {
-            loading.visibility = View.GONE
-        }
     }
 
     override fun showBrowser(url: String) {

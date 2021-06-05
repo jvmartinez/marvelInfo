@@ -9,6 +9,7 @@ import com.jvmartinez.marvelinfo.core.data.remote.repository.RepositoryMarvel
 import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterViewModel
 import com.jvmartinez.marvelinfo.ui.home.HomeViewModel
 import com.jvmartinez.marvelinfo.ui.login.LoginViewModel
+import com.jvmartinez.marvelinfo.ui.main.MainViewModel
 import com.jvmartinez.marvelinfo.ui.signUp.SignUpViewModel
 import com.jvmartinez.marvelinfo.ui.splash.SplashViewModel
 import org.koin.android.viewmodel.dsl.viewModel
@@ -24,6 +25,7 @@ val viewModelModule = module {
     viewModel { DetailsCharacterViewModel(get()) }
     viewModel { LoginViewModel(get(), get()) }
     viewModel { SignUpViewModel(get()) }
+    viewModel { MainViewModel(get()) }
 }
 
 /**

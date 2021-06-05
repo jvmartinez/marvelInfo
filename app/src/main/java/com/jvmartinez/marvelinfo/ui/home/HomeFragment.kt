@@ -1,38 +1,42 @@
 package com.jvmartinez.marvelinfo.ui.home
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ApiResource
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ResponseMarvel
-import com.jvmartinez.marvelinfo.databinding.ActivityHomeBinding
-import com.jvmartinez.marvelinfo.ui.base.BaseActivity
-import com.jvmartinez.marvelinfo.ui.detailCharacter.DetailsCharacterActivity
+import com.jvmartinez.marvelinfo.databinding.FragmentHomeBinding
+import com.jvmartinez.marvelinfo.ui.base.BaseFragment
 import com.jvmartinez.marvelinfo.ui.home.adapter.AdapterCharacters
 import com.jvmartinez.marvelinfo.utils.MarvelInfoError
-import com.jvmartinez.marvelinfo.utils.MarvelInfoUtils
 import com.jvmartinez.marvelinfo.utils.MarvelTags
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener {
-    private lateinit var binding: ActivityHomeBinding
+class HomeFragment : BaseFragment(), HomeActions, SearchView.OnQueryTextListener {
+    private var _binding: FragmentHomeBinding? = null
+    private val binding: FragmentHomeBinding
+    get() = _binding!!
     private val homeViewModel by viewModel<HomeViewModel>()
     private lateinit var adapterCharacters: AdapterCharacters
     private var offset: Int = 0
     private var searchStatus = false
 
-    override fun layoutId(): ViewBinding  {
-      binding = ActivityHomeBinding.inflate(layoutInflater)
-      return binding
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onSetup() {
         homeViewModel.findCharacters(offset).observe(::getLifecycle, ::showCharacters)
-        showLoading()
         onAdapter()
         onClick()
         customUI()
@@ -48,8 +52,8 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
                     searchStatus = false
-                    showLoading()
                     offset += 50
+                    binding.customLoading.loading.visibility = View.VISIBLE
                     homeViewModel.findCharacters(offset).observe(::getLifecycle, ::showCharacters)
                 }
             }
@@ -58,7 +62,7 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
         binding.customHome.searchCharacter.setOnCloseListener(object : android.widget.SearchView.OnCloseListener,
             SearchView.OnCloseListener {
             override fun onClose(): Boolean {
-                showLoading()
+                binding.customLoading.loading.visibility = View.VISIBLE
                 searchStatus = false
                 homeViewModel.findCharacters(0).observe(::getLifecycle, ::showCharacters)
                 return false
@@ -68,7 +72,7 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
     }
 
     private fun showCharacters(apiResource: ApiResource<ResponseMarvel>?) {
-        hideLoading()
+        binding.customLoading.loading.visibility = View.GONE
         when(apiResource) {
             is ApiResource.Failure ->  {
                 when (MarvelInfoError.showError(apiResource.exception?.message.toString())) {
@@ -143,7 +147,7 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
 
     private fun onAdapter() {
         adapterCharacters = AdapterCharacters(mutableListOf(), this)
-        binding.customHome.recyclerViewCharacters.layoutManager = LinearLayoutManager(this)
+        binding.customHome.recyclerViewCharacters.layoutManager = LinearLayoutManager(context)
         binding.customHome.recyclerViewCharacters.setHasFixedSize(true)
         binding.customHome.recyclerViewCharacters.adapter = adapterCharacters
     }
@@ -151,15 +155,10 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
     override fun onShowCharacter(characterID: Int) {
         val bundle = Bundle()
         bundle.putInt(MarvelTags.CHARACTER_ID, characterID)
-        MarvelInfoUtils.callActivity(
-            this,
-            DetailsCharacterActivity::class.java,
-            bundle
-        )
+        findNavController().navigate(R.id.action_homeFragment_to_detailsCharacterActivity, bundle)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        showLoading()
         searchStatus = true
         homeViewModel.findCharacters(0, query).observe(::getLifecycle, ::showCharacters)
         return false
@@ -168,4 +167,5 @@ class HomeActivity : BaseActivity(), HomeActions, SearchView.OnQueryTextListener
     override fun onQueryTextChange(newText: String?): Boolean {
         return false
     }
+
 }

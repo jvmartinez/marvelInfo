@@ -23,8 +23,8 @@ class InfoFragment: BaseFragment(), InfoActions {
     private val binding: FragmentInfoCharacteBinding
         get() = _binding!!
     private val detailsCharacterViewModel by viewModel<DetailsCharacterViewModel>()
-    private var characterId: Int? = 0
-    private var typeAction: Int? = 0
+    private var characterId: Int? = null
+    private var typeAction: Int? = null
     private lateinit var adapterInfo: AdapterInfo
 
     override fun onCreateView(
@@ -32,25 +32,24 @@ class InfoFragment: BaseFragment(), InfoActions {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentInfoCharacteBinding.inflate(inflater, container, false)
+        arguments?.let {
+            characterId = it.getInt(MarvelTags.CHARACTER_ID)
+            typeAction = it.getInt(MarvelTags.TYPE_INFO_CHARACTER)
+        }
+
         return binding.root
     }
 
-    override fun onSetup(view: View) {
+
+    override fun onSetup() {
+        binding.customLoading.loading.visibility = View.VISIBLE
         characterId?.let {
             typeAction?.let { actionType ->
-                showLoading()
                 detailsCharacterViewModel.findAllComics(it, actionType)
                     .observe(::getLifecycle, ::flowComics)
             }
         }
         onAdapter()
-    }
-
-    override fun onSetup() {
-        arguments?.let {
-            characterId = it.getInt(MarvelTags.CHARACTER_ID)
-            typeAction = it.getInt(MarvelTags.TYPE_INFO_CHARACTER)
-        }
     }
 
     private fun onAdapter() {
@@ -60,6 +59,7 @@ class InfoFragment: BaseFragment(), InfoActions {
     }
 
     private fun flowComics(apiResource: ApiResource<ResponseMarvelComic>?) {
+        binding.customLoading.loading.visibility = View.GONE
         when (apiResource) {
             is ApiResource.Failure ->  {
                 when (MarvelInfoError.showError(apiResource.exception?.message.toString())) {
@@ -125,7 +125,6 @@ class InfoFragment: BaseFragment(), InfoActions {
                 }
             }
         }
-        hideLoading()
     }
 
     override fun onGoWeb(url: String) {
