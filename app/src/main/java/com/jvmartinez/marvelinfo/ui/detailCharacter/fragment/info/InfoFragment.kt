@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ApiResource
@@ -42,7 +43,7 @@ class InfoFragment: BaseFragment(), InfoActions {
 
 
     override fun onSetup() {
-        binding.customLoading.loading.visibility = View.VISIBLE
+        binding.customLoading.loading.isVisible = true
         characterId?.let {
             typeAction?.let { actionType ->
                 detailsCharacterViewModel.findAllComics(it, actionType)
@@ -59,7 +60,7 @@ class InfoFragment: BaseFragment(), InfoActions {
     }
 
     private fun flowComics(apiResource: ApiResource<ResponseMarvelComic>?) {
-        binding.customLoading.loading.visibility = View.GONE
+        binding.customLoading.loading.isVisible = false
         when (apiResource) {
             is ApiResource.Failure ->  {
                 when (MarvelInfoError.showError(apiResource.exception?.message.toString())) {

@@ -22,18 +22,17 @@ object MarvelInfoUtils {
 
     /**
      * Method of call action activity
-     * @param currentActivity : Activity current
-     * @param destinationActivity : Activity
+     * @param extra : data action
      */
-    fun callActivity(currentActivity: Activity, destinationActivity: Class<*>, extra: Bundle? = null) {
-        val intent = Intent(currentActivity, destinationActivity)
-        if (extra != null) {
-            intent.putExtras(extra)
+    inline fun <reified T: Activity> Activity.startActivity(extra: Bundle?= null) {
+        val intent = Intent(this, T::class.java)
+        extra.let {
+            it?.let { data -> intent.putExtras(data) }
         }
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-        currentActivity.startActivity(intent)
-        currentActivity.finish()
+        startActivity(intent)
+        this.finish()
     }
 
     /**

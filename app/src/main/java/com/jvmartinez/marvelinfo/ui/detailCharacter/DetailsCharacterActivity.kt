@@ -1,7 +1,7 @@
 package com.jvmartinez.marvelinfo.ui.detailCharacter
 
 import android.os.Bundle
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jvmartinez.marvelinfo.R
@@ -27,7 +27,7 @@ class DetailsCharacterActivity : BaseActivity() {
     }
 
     override fun onSetup() {
-        binding.customLoading.loading.visibility = View.VISIBLE
+        binding.customLoading.loading.isVisible = true
         intent.extras.let {
             extra = it
         }
@@ -65,7 +65,7 @@ class DetailsCharacterActivity : BaseActivity() {
             binding.customDetails.contentCharacter
         ) { tab, position ->
             binding.customDetails.contentCharacter.setCurrentItem(tab.position, true)
-            binding.customLoading.loading.visibility = View.VISIBLE
+            binding.customLoading.loading.isVisible = true
             tab.text = when (position) {
                 0 -> {
                     getString(R.string.lblComics)
@@ -93,7 +93,7 @@ class DetailsCharacterActivity : BaseActivity() {
     }
 
     fun showCharacter(apiResource: ApiResource<ResponseMarvel>?) {
-        binding.customLoading.loading.visibility = View.GONE
+        binding.customLoading.loading.isVisible = false
         when (apiResource) {
             is ApiResource.Failure -> {
                 when (MarvelInfoError.showError(apiResource.exception?.message.toString())) {

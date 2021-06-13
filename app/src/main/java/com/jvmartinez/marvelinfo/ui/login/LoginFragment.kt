@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.jvmartinez.marvelinfo.R
 import com.jvmartinez.marvelinfo.core.data.remote.apiMarvel.ApiResource
@@ -32,6 +33,7 @@ class LoginFragment : BaseFragment() {
 
     private fun onClick() {
         binding.customLogin.btnLogin.setOnClickListener {
+            binding.customLoading.loading.isVisible = true
             loginViewModel.login(
                 binding.customLogin.txtEmail.text.toString(),
                 binding.customLogin.txtPassword.text.toString()
@@ -44,6 +46,7 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun flowLogin(apiResource: ApiResource<LoginEnum>?) {
+        binding.customLoading.loading.isVisible = false
         when (apiResource) {
             is ApiResource.Failure -> {
                 showMessage(

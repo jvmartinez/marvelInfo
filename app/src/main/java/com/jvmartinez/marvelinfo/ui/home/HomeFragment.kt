@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +54,7 @@ class HomeFragment : BaseFragment(), HomeActions, SearchView.OnQueryTextListener
                 if (!recyclerView.canScrollVertically(1)) {
                     searchStatus = false
                     offset += 50
-                    binding.customLoading.loading.visibility = View.VISIBLE
+                    binding.customLoading.loading.isVisible = true
                     homeViewModel.findCharacters(offset).observe(::getLifecycle, ::showCharacters)
                 }
             }
@@ -62,7 +63,7 @@ class HomeFragment : BaseFragment(), HomeActions, SearchView.OnQueryTextListener
         binding.customHome.searchCharacter.setOnCloseListener(object : android.widget.SearchView.OnCloseListener,
             SearchView.OnCloseListener {
             override fun onClose(): Boolean {
-                binding.customLoading.loading.visibility = View.VISIBLE
+                binding.customLoading.loading.isVisible = true
                 searchStatus = false
                 homeViewModel.findCharacters(0).observe(::getLifecycle, ::showCharacters)
                 return false
@@ -72,7 +73,7 @@ class HomeFragment : BaseFragment(), HomeActions, SearchView.OnQueryTextListener
     }
 
     private fun showCharacters(apiResource: ApiResource<ResponseMarvel>?) {
-        binding.customLoading.loading.visibility = View.GONE
+        binding.customLoading.loading.isVisible = false
         when(apiResource) {
             is ApiResource.Failure ->  {
                 when (MarvelInfoError.showError(apiResource.exception?.message.toString())) {
